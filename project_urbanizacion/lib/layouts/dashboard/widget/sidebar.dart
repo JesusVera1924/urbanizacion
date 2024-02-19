@@ -27,7 +27,7 @@ class _SidebarState extends State<Sidebar> {
   @override
   void initState() {
     //INIZIALIZAR CONSULTA DEL MENU
-    Provider.of<SideMenuProvider>(context, listen: false).initList();
+    //Provider.of<SideMenuProvider>(context, listen: false).initList();
     super.initState();
   }
 

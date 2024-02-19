@@ -454,7 +454,7 @@ class _BatchtViewState extends State<BatchtView> {
                             children: [
                               const Padding(
                                   padding: EdgeInsets.only(bottom: 5),
-                                  child: Text('# terreno asignado',
+                                  child: Text('# Terreno asignado',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12))),
@@ -487,7 +487,7 @@ class _BatchtViewState extends State<BatchtView> {
                             children: [
                               const Padding(
                                   padding: EdgeInsets.only(bottom: 5),
-                                  child: Text('# terreno Regularizado',
+                                  child: Text('# Terreno Regularizado',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12))),
@@ -624,7 +624,6 @@ class _BatchtViewState extends State<BatchtView> {
                   ],
                 ),
               ))
-       
         ],
       ),
     );

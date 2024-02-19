@@ -6,10 +6,12 @@ import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/model/gc0032Lot.dart';
 import 'package:project_urbanizacion/model/gc0032a.dart';
 import 'package:project_urbanizacion/model/gc0032c.dart';
+import 'package:project_urbanizacion/model/gc0040.dart';
+import 'package:project_urbanizacion/model/gc0042.dart';
 import 'package:project_urbanizacion/model/usuario.dart';
 
 class SolicitudApi {
-  static String dominio = "localhost:8080";
+  static String dominio = "192.168.3.57:8080";
   static String path = "/regularizacion";
 
   Future<Usuario?> login(String email, String pass) async {
@@ -135,6 +137,39 @@ class SolicitudApi {
         body: objeto.toJson(),
         headers: {"Content-type": "application/json;charset=UTF-8"});
     try {
+      if (resquet.statusCode != 200) {
+        throw Exception('${resquet.statusCode}');
+      } else {
+        return utf8.decode(resquet.bodyBytes);
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
+  Future<String> postinsertGc0040(Gc0040 objeto) async {
+    var url = Uri.http(dominio, '$path/insertGc0040');
+
+    final resquet = await http.post(url,
+        body: objeto.toJson(),
+        headers: {"Content-type": "application/json;charset=UTF-8"});
+    try {
+      if (resquet.statusCode != 200) {
+        throw Exception('${resquet.statusCode}');
+      } else {
+        return utf8.decode(resquet.bodyBytes);
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
+  Future<String> postinsertGc0042(Gc0042 objeto) async {
+    var url = Uri.http(dominio, '$path/insertGc0042');
+    try {
+      final resquet = await http.post(url,
+          body: objeto.toJson(),
+          headers: {"Content-type": "application/json;charset=UTF-8"});
       if (resquet.statusCode != 200) {
         throw Exception('${resquet.statusCode}');
       } else {

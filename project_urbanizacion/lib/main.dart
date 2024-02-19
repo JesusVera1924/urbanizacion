@@ -5,7 +5,9 @@ import 'package:project_urbanizacion/layouts/splash/splash_layout.dart';
 import 'package:project_urbanizacion/providers/auth_provider.dart';
 import 'package:project_urbanizacion/providers/bach_provider.dart';
 import 'package:project_urbanizacion/providers/committe_provider.dart';
+import 'package:project_urbanizacion/providers/document_provider.dart';
 import 'package:project_urbanizacion/providers/habitante_provider.dart';
+import 'package:project_urbanizacion/providers/possession_provider.dart';
 import 'package:project_urbanizacion/providers/sidemenu_provider.dart';
 import 'package:project_urbanizacion/router/router.dart';
 import 'package:project_urbanizacion/services/local_storage.dart';
@@ -30,7 +32,9 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(lazy: false, create: (_) => HabitanteProvider()),
         ChangeNotifierProvider(lazy: false, create: (_) => SideMenuProvider()),
         ChangeNotifierProvider(lazy: false, create: (_) => CommitteProvider()),
-        ChangeNotifierProvider(lazy: false, create: (_) => BachProvider())
+        ChangeNotifierProvider(lazy: false, create: (_) => BachProvider()),
+        ChangeNotifierProvider(lazy: false, create: (_) => DocumentProvider()),
+        ChangeNotifierProvider(lazy: false, create: (_) => PossessionProvider())
       ],
       child: const MyApp(),
     );

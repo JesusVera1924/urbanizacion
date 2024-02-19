@@ -451,7 +451,6 @@ class _HabitanteViewState extends State<HabitanteView> {
                               ],
                             ),
                           )
-                       
                         ],
                       )),
                   /* VerticalDivider(thickness: 3, color: Colors.grey[600]), */
@@ -782,9 +781,9 @@ class _HabitanteViewState extends State<HabitanteView> {
       width: !ScreenQueries.instance.isMobile(context)
           ? ScreenQueries.instance.isTablet(context)
               ? ScreenQueries.instance
-                  .width2(ScreenQueries.instance.width(context), 4)
+                  .width2(ScreenQueries.instance.width(context), 3)
               : ScreenQueries.instance
-                  .width2(ScreenQueries.instance.width(context), 1.8)
+                  .width2(ScreenQueries.instance.width(context), 2)
           : double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
