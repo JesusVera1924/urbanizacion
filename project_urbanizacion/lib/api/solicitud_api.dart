@@ -8,21 +8,21 @@ import 'package:project_urbanizacion/model/gc0032a.dart';
 import 'package:project_urbanizacion/model/gc0032c.dart';
 import 'package:project_urbanizacion/model/gc0040.dart';
 import 'package:project_urbanizacion/model/gc0042.dart';
-import 'package:project_urbanizacion/model/usuario.dart';
+import 'package:project_urbanizacion/model/http/auth_response.dart';
 
 class SolicitudApi {
   static String dominio = "192.168.3.57:8080";
   static String path = "/regularizacion";
 
-  Future<Usuario?> login(String email, String pass) async {
+  Future<Authentication?> login(String email, String pass) async {
     var url = Uri.http(dominio, '$path/login', {'correo': email, 'pass': pass});
 
     try {
       //print(url);
-      final respuesta = await http.post(url);
+      final respuesta = await http.get(url);
       if (respuesta.statusCode == 200) {
         return utf8.decode(respuesta.bodyBytes) != ""
-            ? Usuario.fromJson(utf8.decode(respuesta.bodyBytes))
+            ? Authentication.fromJson(utf8.decode(respuesta.bodyBytes))
             : null;
       } else {
         throw Exception(respuesta.statusCode.toString());
@@ -202,6 +202,24 @@ class SolicitudApi {
     }
   }
 
+  Future<bool> putGc0001(Gc0001 datos) async {
+    var url = Uri.http(dominio, '$path/updateGc0001');
+
+    final resquet = await http.post(url,
+        body: datos.toJson(),
+        headers: {"Content-type": "application/json;charset=UTF-8"});
+    try {
+      if (resquet.statusCode != 200) {
+        throw Exception('${resquet.statusCode}');
+      } else {
+        String cadena = utf8.decode(resquet.bodyBytes);
+        return cadena.contains('200');
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
   Future<bool> putGc0032A(List<Gc0032A> datos) async {
     List<Map> bod = [];
     var url = Uri.http(dominio, '$path/updateGc0032A');
@@ -269,6 +287,24 @@ class SolicitudApi {
     }
   }
 
+  Future<Gc0032?> getHabitante(String value) async {
+    var url = Uri.http(dominio, '$path/getHabitante', {'cedula': value});
+
+    try {
+      //print(url);
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return utf8.decode(respuesta.bodyBytes) != ""
+            ? Gc0032.fromJson(utf8.decode(respuesta.bodyBytes))
+            : null;
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
   Future<List<Gc0032A>> getReferencia1(String value) async {
     var url = Uri.http(dominio, '$path/getHabitanteRef1', {'value': value});
 
@@ -317,6 +353,24 @@ class SolicitudApi {
     }
   }
 
+  Future<Gc0001?> getGc0001CodEmp(String empresa) async {
+    var url = Uri.http(dominio, '$path/getCommitteEmpresa', {"value": empresa});
+
+    try {
+      //print(url);
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return utf8.decode(respuesta.bodyBytes) != ""
+            ? Gc0001.fromJson(utf8.decode(respuesta.bodyBytes))
+            : null;
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
   Future<Gc0032LOT?> getGc0032LOT(String cedula) async {
     var url = Uri.http(dominio, '$path/getInfLote', {"value": cedula});
 
@@ -335,6 +389,72 @@ class SolicitudApi {
     }
   }
 
+  Future<String?> getMaxNumTul() async {
+    var url = Uri.http(dominio, '$path/getMaxNumTul');
+
+    try {
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return utf8.decode(respuesta.bodyBytes) != ""
+            ? utf8.decode(respuesta.bodyBytes).trim()
+            : null;
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
+  Future<String?> getMaxNtaLot() async {
+    var url = Uri.http(dominio, '$path/getMaxNtaLot');
+
+    try {
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return utf8.decode(respuesta.bodyBytes) != ""
+            ? utf8.decode(respuesta.bodyBytes).trim()
+            : null;
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
+  Future<String?> getMaxNumDup() async {
+    var url = Uri.http(dominio, '$path/getMaxNumDup');
+
+    try {
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return utf8.decode(respuesta.bodyBytes) != ""
+            ? utf8.decode(respuesta.bodyBytes).trim()
+            : null;
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
+  Future<List<Gc0032LOT>> getListGc0032LOT(String value) async {
+    var url = Uri.http(dominio, '$path/getInfLoteList', {'value': value});
+
+    try {
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return parseGc0032LOT(utf8.decode(respuesta.bodyBytes));
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   //PARSEOS DE LISTA
 
   List<Gc0032> parseGc0032(String respuesta) {
@@ -350,6 +470,11 @@ class SolicitudApi {
   List<Gc0032C> parseGc0032C(String respuesta) {
     final parseo = jsonDecode(respuesta);
     return parseo.map<Gc0032C>((json) => Gc0032C.fromMap(json)).toList();
+  }
+
+  List<Gc0032LOT> parseGc0032LOT(String respuesta) {
+    final parseo = jsonDecode(respuesta);
+    return parseo.map<Gc0032LOT>((json) => Gc0032LOT.fromMap(json)).toList();
   }
 
   // LIST DE PARSEO ----------------------------------------------------------------------------------------------------------------------

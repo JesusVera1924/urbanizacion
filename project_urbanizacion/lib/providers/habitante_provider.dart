@@ -90,7 +90,7 @@ class HabitanteProvider extends ChangeNotifier {
         fcrNic: DateTime.now(),
         umdNic: "",
         fmdNic: DateTime.now(),
-        stsNic: "I"));
+        stsNic: "A"));
 
     if (opt!.contains("200")) {
       for (var e in listRef) {

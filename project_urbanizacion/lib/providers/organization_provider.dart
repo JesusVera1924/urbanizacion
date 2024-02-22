@@ -5,35 +5,34 @@ import 'package:project_urbanizacion/model/gc0002.dart';
 import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/utils/constantes.dart';
 
-class CommitteProvider extends ChangeNotifier {
+class OrganizationProvider extends ChangeNotifier {
   final api = SolicitudApi();
+
   Gc0001? empresaActual;
   Gc0001? objeto;
-  //List<Gc0032> list = [];
+
   List<String> list = [];
-  List<String> listComitte = [];
   //controladores de caja de textos
+  final idETxtController = TextEditingController();
   final idTxtController = TextEditingController();
   final nombreTxtController = TextEditingController();
   final representanteTxtController = TextEditingController();
   final direccionTxtController = TextEditingController();
   final celularTxtController = TextEditingController();
   final correoTxtController = TextEditingController();
-  final periodoTxtController = TextEditingController();
 
-  Future<String?> saveComite(String nomEmp, String dirEmp, String tmvEmp,
-      String bznEmp, String nicEmp, String drlEmp) async {
+  Future<String?> saveComite() async {
     String resp = "";
     int i = 0;
 
     Gc0001 objeto = Gc0001(
-        codEmp: "01",
-        nomEmp: nomEmp,
-        dirEmp: dirEmp,
-        tmvEmp: tmvEmp,
-        bznEmp: bznEmp,
-        nicEmp: nicEmp,
-        drlEmp: drlEmp,
+        codEmp: idETxtController.text,
+        nomEmp: nombreTxtController.text,
+        dirEmp: direccionTxtController.text,
+        tmvEmp: celularTxtController.text,
+        bznEmp: correoTxtController.text,
+        nicEmp: idTxtController.text,
+        drlEmp: representanteTxtController.text,
         na1Emp: "",
         na2Emp: "",
         na3Emp: "",
@@ -59,11 +58,18 @@ class CommitteProvider extends ChangeNotifier {
     String opt = await api.postinsertGc0001(objeto);
 
     if (opt.contains("200")) {
+      nombreTxtController.clear();
+      direccionTxtController.clear();
+      celularTxtController.clear();
+      correoTxtController.clear();
+      idTxtController.clear();
+      representanteTxtController.clear();
+      list.clear();
       resp = "Peticion Exitosa";
+      notifyListeners();
     } else {
       resp = "Error en la peticion";
     }
-    list.clear();
 
     return resp;
   }
@@ -106,7 +112,6 @@ class CommitteProvider extends ChangeNotifier {
 
     if (opt) {
       resp = "Peticion Exitosa";
-      await obtenerCommitteActual2(g);
     } else {
       resp = "Error en la peticion";
     }
@@ -152,53 +157,7 @@ class CommitteProvider extends ChangeNotifier {
   }
 
   Future<void> getRequestData() async {
-    await obtenerCommitteActual();
     await obtenerCommitte();
-    notifyListeners();
-  }
-
-  Future obtenerCommitteActual() async {
-    objeto = null;
-    listComitte.clear();
-    objeto = await api.getGc0001();
-    if (objeto != null) {
-      if (objeto!.na1Emp != "") {
-        listComitte.add("1 - ${objeto!.na1Emp}");
-      }
-      if (objeto!.na2Emp != "") {
-        listComitte.add("2 - ${objeto!.na2Emp}");
-      }
-      if (objeto!.na3Emp != "") {
-        listComitte.add("3 - ${objeto!.na3Emp}");
-      }
-      if (objeto!.na4Emp != "") {
-        listComitte.add("4 - ${objeto!.na4Emp}");
-      }
-      if (objeto!.na5Emp != "") {
-        listComitte.add("5 - ${objeto!.na5Emp}");
-      }
-    }
-  }
-
-  Future obtenerCommitteActual2(Gc0001 val) async {
-    objeto = null;
-    listComitte.clear();
-    objeto = val;
-    if (val.na1Emp != "") {
-      listComitte.add("1 - ${val.na1Emp}");
-    }
-    if (val.na2Emp != "") {
-      listComitte.add("2 - ${val.na2Emp}");
-    }
-    if (val.na3Emp != "") {
-      listComitte.add("3 - ${val.na3Emp}");
-    }
-    if (val.na4Emp != "") {
-      listComitte.add("4 - ${val.na4Emp}");
-    }
-    if (val.na5Emp != "") {
-      listComitte.add("5 - ${val.na5Emp}");
-    }
     notifyListeners();
   }
 

@@ -68,7 +68,7 @@ class UtilView {
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
       description: Text(message),
       width: 70,
-      height: 60,
+      height: 80,
     ).show(context);
   }
 
@@ -96,5 +96,15 @@ class UtilView {
     }
 
     return listaAnios;
+  }
+
+  static String getSecuenceString(String numero, int log) {
+    int fix = numero.length; //tamaño del numero
+    String resp = ""; // nuevo String a devolver
+    String nuevo = "${int.parse(numero) + 1}";
+    if (fix <= log) {
+      resp = nuevo.padLeft(log, '0');
+    }
+    return resp;
   }
 }

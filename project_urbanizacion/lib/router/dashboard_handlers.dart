@@ -8,6 +8,7 @@ import 'package:project_urbanizacion/ui/views/document_view.dart';
 import 'package:project_urbanizacion/ui/views/habitante_view.dart';
 import 'package:project_urbanizacion/ui/views/default_view.dart';
 import 'package:project_urbanizacion/ui/views/login_view.dart';
+import 'package:project_urbanizacion/ui/views/organization_view.dart';
 import 'package:project_urbanizacion/ui/views/possession_view.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +43,17 @@ class DashboardHandlers {
         .setCurrentPageUrl(Flurorouter.comiteRoute, "Comite".toUpperCase());
     if (authProvider.authStatus == AuthStatus.authenticated) {
       return const CommitteView();
+    } else {
+      return const LoginView();
+    }
+  });
+
+  static Handler organizationHandlers = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPageUrl(
+        Flurorouter.organizationRoute, "Organización".toUpperCase());
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const OrganizationView();
     } else {
       return const LoginView();
     }

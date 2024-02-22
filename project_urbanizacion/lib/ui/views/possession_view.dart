@@ -4,11 +4,14 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project_urbanizacion/model/gc0032.dart';
+import 'package:project_urbanizacion/providers/bach_provider.dart';
 import 'package:project_urbanizacion/providers/habitante_provider.dart';
 import 'package:project_urbanizacion/providers/possession_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/components/white_card.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_acep_canc.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_terreno.dart';
 import 'package:project_urbanizacion/utils/date_formatter.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
@@ -24,7 +27,7 @@ class PossessionView extends StatefulWidget {
 class _PossessionViewState extends State<PossessionView> {
   //PRRIMERA TARJETA CONTROLADORES
   int valueTpInit = 1;
-  final numeroTxtController = TextEditingController();
+
   final fechaTxtController = TextEditingController();
   final idTxtController = TextEditingController();
 
@@ -37,19 +40,34 @@ class _PossessionViewState extends State<PossessionView> {
 
   //controladores tercer tarjeta
   int valueInit = 1;
-  Gc0032? objeto;
+
   final valTxtController = TextEditingController();
   final obsTxtController = TextEditingController();
+  final encTxtController = TextEditingController();
+
+  @override
+  void initState() {
+    Provider.of<PossessionProvider>(context, listen: false).getObtenerTicket();
+    Provider.of<BachProvider>(context, listen: false).getObtenerTicket();
+    super.initState();
+  }
 
   @override
   void dispose() {
-    numeroTxtController.dispose();
+    fechaTxtController.dispose();
+    idTxtController.dispose();
+    idATxtController.dispose();
+    idRTxtController.dispose();
+    obsLtTxtController.dispose();
+    valTxtController.dispose();
+    obsTxtController.dispose();
+    encTxtController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final habitanteProvider = Provider.of<HabitanteProvider>(context);
+    final batchProvider = Provider.of<BachProvider>(context);
     final possessionProvider = Provider.of<PossessionProvider>(context);
 
     void selectDate(String cadena) async {
@@ -86,7 +104,8 @@ class _PossessionViewState extends State<PossessionView> {
                       children: [
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 6),
-                          width: ScreenQueries.instance.customWidth(context, 8),
+                          width:
+                              ScreenQueries.instance.customWidth(context, 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -97,13 +116,15 @@ class _PossessionViewState extends State<PossessionView> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12))),
                               TextFormField(
-                                controller: numeroTxtController,
+                                controller:
+                                    possessionProvider.numeroTxtController,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^(?:\+|-)?\d+$')),
                                   LengthLimitingTextInputFormatter(6),
                                 ],
                                 style: CustomLabels.h2,
+                                enabled: false,
                                 decoration: CustomInputs.txtInputDecoration2(
                                     hint: '', icon: Icons.contacts_rounded),
                                 validator: (value) {
@@ -230,7 +251,41 @@ class _PossessionViewState extends State<PossessionView> {
                 )),
             WhiteCard(
                 title: "INFORMACION DE LOTE",
-                listWidget: const [],
+                listWidget: [
+                  TextButton(
+                      onPressed: () async {
+                        if (idTxtController.text != "") {
+                          await showDialogAddTerreno(
+                              context, batchProvider, idTxtController.text);
+                        } else {
+                          UtilView.messageInfo(context, "Advertencia",
+                              "[Identificación]\nNo puede ir vacio");
+                        }
+                      },
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                            Colors.blue), // Color del texto del botón
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return Colors
+                                  .greenAccent; // Color de overlay al pasar el mouse
+                            }
+                            return Colors
+                                .transparent; // Si no está en estado hover, usa el color predeterminado
+                          },
+                        ),
+                        mouseCursor: MaterialStateProperty.all<MouseCursor>(
+                          SystemMouseCursors
+                              .click, // Cambia el cursor al pasar sobre el botón
+                        ),
+                        // Otros estilos de botón
+                      ),
+                      child: Text('Crear Terreno',
+                          style: CustomLabels.h4.copyWith(
+                              decoration: TextDecoration.underline,
+                              color: Colors.black)))
+                ],
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -385,31 +440,29 @@ class _PossessionViewState extends State<PossessionView> {
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(
-                              left: 6, right: 6, bottom: 4),
-                          height: 40,
-                          width: ScreenQueries.instance.customWidth(context, 6),
-                          child: CustomDropdown<Gc0032>.searchRequest(
-                            futureRequest: habitanteProvider.getRequestData,
-                            closedHeaderPadding: const EdgeInsets.all(10),
-                            decoration: CustomDropdownDecoration(
-                                closedFillColor: Colors.grey[500],
-                                expandedFillColor: Colors.blueGrey,
-                                headerStyle: CustomLabels.h3,
-                                hintStyle: CustomLabels.h3,
-                                listItemStyle: CustomLabels.h3),
-                            hintText: 'Seleccionar encargado del pago',
-                            searchHintText: "Busqueda",
-                            noResultFoundText: "No se encontro resultados",
-                            onChanged: (value) {
-                              objeto = value;
-                            },
-                            validator: (p0) {
-                              if (objeto == null) {
-                                return "Este campo es obligatorio";
-                              }
-                              return null;
-                            },
+                          margin: const EdgeInsets.symmetric(horizontal: 6),
+                          width: ScreenQueries.instance.customWidth(context, 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 5),
+                                  child: Text('Encargado de pago',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12))),
+                              TextFormField(
+                                controller: encTxtController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'(^[a-zA-Z ]*$)')),
+                                  LengthLimitingTextInputFormatter(50),
+                                ],
+                                style: CustomLabels.h2,
+                                decoration: CustomInputs.txtInputDecoration2(
+                                    hint: '', icon: Icons.person),
+                              ),
+                            ],
                           ),
                         ),
                         Container(
@@ -477,28 +530,37 @@ class _PossessionViewState extends State<PossessionView> {
                             child: FilledButton(
                               onPressed: () async {
                                 if (formkey.currentState!.validate()) {
-                                  var resp =
-                                      await possessionProvider.saveReferencia(
-                                          "$valueTpInit",
-                                          numeroTxtController.text,
-                                          fechaTxtController.text,
-                                          idTxtController.text,
-                                          idATxtController.text,
-                                          idRTxtController.text,
-                                          "",
-                                          obsLtTxtController.text,
-                                          "$valueInit",
-                                          objeto!.nomNic,
-                                          obsTxtController.text,
-                                          valTxtController.text);
+                                  var respuesta = await dialogAcepCanc(
+                                      context,
+                                      "Notificación",
+                                      Text('Deseas continuar?',
+                                          style: CustomLabels.h3),
+                                      Icons.assignment_turned_in_rounded,
+                                      Colors.green);
 
-                                  if (resp) {
-                                    formkey.currentState!.reset();
-                                    UtilView.messageAccess(context,
-                                        "Notificación", "Proceso Exitoso");
-                                  } else {
-                                    UtilView.messageError(context, "Error",
-                                        "Error del formulario");
+                                  if (respuesta) {
+                                    var resp =
+                                        await possessionProvider.saveReferencia(
+                                            "$valueTpInit",
+                                            fechaTxtController.text,
+                                            idTxtController.text,
+                                            idATxtController.text,
+                                            idRTxtController.text,
+                                            "",
+                                            obsLtTxtController.text,
+                                            "$valueInit",
+                                            encTxtController.text,
+                                            obsTxtController.text,
+                                            valTxtController.text);
+
+                                    if (resp) {
+                                      formkey.currentState!.reset();
+                                      UtilView.messageAccess(context,
+                                          "Notificación", "Proceso Exitoso");
+                                    } else {
+                                      UtilView.messageError(context, "Error",
+                                          "Error del formulario");
+                                    }
                                   }
                                 } else {
                                   UtilView.messageError(

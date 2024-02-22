@@ -6,6 +6,8 @@ import 'package:project_urbanizacion/providers/bach_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/components/white_card.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_acep_canc.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_lotes.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 import 'package:provider/provider.dart';
@@ -28,21 +30,60 @@ class _BatchtViewState extends State<BatchtView> {
   final dirETxtController = TextEditingController();
   final mdmOTxtController = TextEditingController();
   final dirOTxtController = TextEditingController();
-  final idATxtController = TextEditingController();
+
   final idRTxtController = TextEditingController();
   final barrioTxtController = TextEditingController();
 
   //CONTROLADOR DEL FORMULARIO
   final formkey = GlobalKey<FormState>();
+  //Enfoques de navegacion entre cajas
+  late FocusNode focusId;
+  late FocusNode focusMdmN;
+  late FocusNode focusDirN;
+  late FocusNode focusMdmS;
+  late FocusNode focusDirS;
+  late FocusNode focusMdmE;
+  late FocusNode focusDirE;
+  late FocusNode focusMdmO;
+  late FocusNode focusDirO;
+  late FocusNode focusIdTa;
+  late FocusNode focusIdTr;
+  late FocusNode focusBarrio;
 
   @override
   void initState() {
-    // TODO: implement initState
+    focusId = FocusNode();
+    focusMdmN = FocusNode();
+    focusDirN = FocusNode();
+    focusMdmS = FocusNode();
+    focusDirS = FocusNode();
+    focusMdmE = FocusNode();
+    focusDirE = FocusNode();
+    focusMdmO = FocusNode();
+    focusDirO = FocusNode();
+    focusIdTa = FocusNode();
+    focusIdTr = FocusNode();
+    focusBarrio = FocusNode();
+    Provider.of<BachProvider>(context, listen: false).getObtenerTicket();
     super.initState();
   }
 
   @override
   void dispose() {
+    //LIBERACION DE ENFOQUES
+    focusId.dispose();
+    focusMdmN.dispose();
+    focusDirN.dispose();
+    focusMdmS.dispose();
+    focusDirS.dispose();
+    focusMdmE.dispose();
+    focusDirE.dispose();
+    focusMdmO.dispose();
+    focusDirO.dispose();
+    focusIdTa.dispose();
+    focusIdTr.dispose();
+    focusBarrio.dispose();
+    //LIBERACION DE CONTROLADORES
     idTextEditingController.dispose();
     mdmNTxtController.dispose();
     dirNTxtController.dispose();
@@ -52,7 +93,6 @@ class _BatchtViewState extends State<BatchtView> {
     dirETxtController.dispose();
     mdmOTxtController.dispose();
     dirOTxtController.dispose();
-    idATxtController.dispose();
     idRTxtController.dispose();
     barrioTxtController.dispose();
     formkey.currentState!.dispose();
@@ -62,6 +102,8 @@ class _BatchtViewState extends State<BatchtView> {
   @override
   Widget build(BuildContext context) {
     final bachProvider = Provider.of<BachProvider>(context);
+    focusId.requestFocus();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: ListView(
@@ -92,15 +134,17 @@ class _BatchtViewState extends State<BatchtView> {
                           ],
                           enabled: bachProvider.isBloque,
                           style: CustomLabels.h2,
+                          focusNode: focusId,
                           onChanged: (value) async {
                             if (value.length == 10 ||
                                 value.length == 13 ||
                                 value.length == 15) {
-                              var resp = await bachProvider.getLote(value);
+                              var resp = await bachProvider.getLoteList(value);
 
                               if (resp) {
-                                idTextEditingController.text =
-                                    bachProvider.obj!.secNic;
+                                bachProvider.obj = await showDialogSelectLotes(
+                                    context, bachProvider.listObj);
+
                                 mdmNTxtController.text =
                                     "${bachProvider.obj!.mtnLot}";
                                 dirNTxtController.text =
@@ -117,7 +161,7 @@ class _BatchtViewState extends State<BatchtView> {
                                     "${bachProvider.obj!.mtoLot}";
                                 dirOTxtController.text =
                                     bachProvider.obj!.dtoLot;
-                                idATxtController.text =
+                                bachProvider.idATxtController.text =
                                     "${bachProvider.obj!.ntaLot}";
                                 idRTxtController.text =
                                     "${bachProvider.obj!.ntrLot}";
@@ -159,12 +203,35 @@ class _BatchtViewState extends State<BatchtView> {
                               dirETxtController.clear();
                               mdmOTxtController.clear();
                               dirOTxtController.clear();
-                              idATxtController.clear();
+                              bachProvider.idATxtController.clear();
                               idRTxtController.clear();
                               barrioTxtController.clear();
                               bachProvider.showViewEvent();
                             },
-                            child: const Icon(Icons.cancel, color: Colors.red)))
+                            child:
+                                const Icon(Icons.cancel, color: Colors.red))),
+                  if (!bachProvider.isBloque) const Spacer(flex: 1),
+                  if (!bachProvider.isBloque)
+                    SizedBox(
+                      width: 300,
+                      child: Card(
+                        elevation: 4,
+                        child: ListTile(
+                          title: Text('Datos del contribuyente',
+                              style: CustomLabels.h4.copyWith(
+                                  fontWeight:
+                                      FontWeight.bold)), // Contenido del card
+                          subtitle: Text(
+                              "Nombre: ${bachProvider.habitante!.nomNic}"
+                                  .toUpperCase(),
+                              style: CustomLabels.h4
+                                  .copyWith(fontWeight: FontWeight.bold)),
+                          contentPadding: const EdgeInsets.all(1),
+                          leading: const Icon(
+                              Icons.star), // Icono a la izquierda del título
+                        ),
+                      ),
+                    )
                 ],
               )),
           WhiteCard(
@@ -192,6 +259,7 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: mdmNTxtController,
+                                focusNode: focusMdmN,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^(?:\+|-)?\d+$')),
@@ -225,6 +293,7 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: dirNTxtController,
+                                focusNode: focusDirN,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'(^[a-zA-Z ]*$)')),
@@ -258,6 +327,7 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: mdmSTxtController,
+                                focusNode: focusMdmS,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^(?:\+|-)?\d+$')),
@@ -291,6 +361,7 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: dirSTxtController,
+                                focusNode: focusDirS,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'(^[a-zA-Z ]*$)')),
@@ -324,6 +395,7 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: mdmETxtController,
+                                focusNode: focusMdmE,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^(?:\+|-)?\d+$')),
@@ -357,6 +429,7 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: dirETxtController,
+                                focusNode: focusDirE,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'(^[a-zA-Z ]*$)')),
@@ -390,6 +463,7 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: mdmOTxtController,
+                                focusNode: focusMdmO,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^(?:\+|-)?\d+$')),
@@ -423,6 +497,7 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: dirOTxtController,
+                                focusNode: focusDirO,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'(^[a-zA-Z ]*$)')),
@@ -459,21 +534,12 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12))),
                               TextFormField(
-                                controller: idATxtController,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'^(?:\+|-)?\d+$')),
-                                  LengthLimitingTextInputFormatter(5),
-                                ],
+                                controller: bachProvider.idATxtController,
+                                focusNode: focusIdTa,
                                 style: CustomLabels.h2,
                                 decoration: CustomInputs.txtInputDecoration2(
                                     hint: '', icon: Icons.contacts_rounded),
-                                validator: (value) {
-                                  if (value == null || value.length <= 4) {
-                                    return 'Por favor, introduzca una identificacion valida';
-                                  }
-                                  return null;
-                                },
+                                enabled: false,
                               ),
                             ],
                           ),
@@ -499,6 +565,7 @@ class _BatchtViewState extends State<BatchtView> {
                                   LengthLimitingTextInputFormatter(5),
                                 ],
                                 style: CustomLabels.h2,
+                                focusNode: focusIdTr,
                                 decoration: CustomInputs.txtInputDecoration2(
                                     hint: '', icon: Icons.contacts_rounded),
                                 validator: (value) {
@@ -526,6 +593,7 @@ class _BatchtViewState extends State<BatchtView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: barrioTxtController,
+                                focusNode: focusBarrio,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'(^[a-zA-Z ]*$)')),
@@ -549,28 +617,38 @@ class _BatchtViewState extends State<BatchtView> {
                           child: FilledButton(
                             onPressed: () async {
                               if (formkey.currentState!.validate()) {
-                                var resp = await bachProvider.saveReferencia(
-                                    idTextEditingController.text,
-                                    mdmNTxtController.text,
-                                    dirNTxtController.text,
-                                    mdmSTxtController.text,
-                                    dirSTxtController.text,
-                                    mdmETxtController.text,
-                                    dirETxtController.text,
-                                    mdmOTxtController.text,
-                                    dirOTxtController.text,
-                                    idATxtController.text,
-                                    idRTxtController.text,
-                                    barrioTxtController.text);
+                                var opt = await dialogAcepCanc(
+                                    context,
+                                    "Notificación",
+                                    Text('Deseas continuar?',
+                                        style: CustomLabels.h3),
+                                    Icons.assignment_turned_in_rounded,
+                                    Colors.green);
 
-                                if (resp) {
-                                  idTextEditingController.clear();
-                                  formkey.currentState!.reset();
-                                  UtilView.messageAccess(context,
-                                      "Notificación", "Proceso Exitoso");
-                                } else {
-                                  UtilView.messageError(
-                                      context, "Error", "Error del formulario");
+                                if (opt) {
+                                  var resp = await bachProvider.saveReferencia(
+                                      idTextEditingController.text,
+                                      mdmNTxtController.text,
+                                      dirNTxtController.text,
+                                      mdmSTxtController.text,
+                                      dirSTxtController.text,
+                                      mdmETxtController.text,
+                                      dirETxtController.text,
+                                      mdmOTxtController.text,
+                                      dirOTxtController.text,
+                                      bachProvider.idATxtController.text,
+                                      idRTxtController.text,
+                                      barrioTxtController.text);
+
+                                  if (resp) {
+                                    idTextEditingController.clear();
+                                    formkey.currentState!.reset();
+                                    UtilView.messageAccess(context,
+                                        "Notificación", "Proceso Exitoso");
+                                  } else {
+                                    UtilView.messageError(context, "Error",
+                                        "Error del formulario");
+                                  }
                                 }
                               } else {
                                 UtilView.messageError(

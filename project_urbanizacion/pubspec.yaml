@@ -46,6 +46,7 @@ dependencies:
   animated_custom_dropdown: ^3.0.0
   syncfusion_flutter_core: ^24.2.3
   lottie: ^3.0.0
+  syncfusion_flutter_pdf: ^24.2.3
   shared_preferences: ^2.2.2
 
 dev_dependencies:

@@ -14,6 +14,7 @@ class Flurorouter {
   // Dashboard
   static String defaulRoute = '/regularizacion';
   static String habitanteRoute = '/regularizacion/habitante';
+  static String organizationRoute = '/regularizacion/organization';
   static String comiteRoute = '/regularizacion/comite';
   static String batchRoute = '/regularizacion/terreno';
   static String documentRoute = '/regularizacion/documento';
@@ -41,6 +42,10 @@ class Flurorouter {
 
     router.define(comiteRoute,
         handler: DashboardHandlers.comiteHandlers,
+        transitionType: TransitionType.fadeIn);
+
+    router.define(organizationRoute,
+        handler: DashboardHandlers.organizationHandlers,
         transitionType: TransitionType.fadeIn);
 
     router.define(batchRoute,

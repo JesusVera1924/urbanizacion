@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:project_urbanizacion/api/solicitud_api.dart';
+import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/model/gc0032Lot.dart';
 import 'package:project_urbanizacion/model/gc0040.dart';
+import 'package:project_urbanizacion/utils/create_file_web.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 
 class DocumentProvider extends ChangeNotifier {
   final api = SolicitudApi();
   Gc0032LOT? obj;
+  Gc0032? habitante;
+  List<Gc0032LOT> listObj = [];
   bool isBloque = true;
+  final idDocTxtController = TextEditingController();
   Future<bool> saveReferencia(
-      String numDup,
       String fecDup,
       String secNic,
       String mtnLot,
@@ -28,9 +32,9 @@ class DocumentProvider extends ChangeNotifier {
       String opgLot,
       String vpgLot) async {
     try {
-      String opt = await api.postinsertGc0040(Gc0040(
+      var objeto = Gc0040(
           codEmp: "01",
-          numDup: numDup,
+          numDup: idDocTxtController.text,
           fecDup: UtilView.convertStringToDate(fecDup),
           secNic: secNic,
           mtnLot: double.parse(mtnLot),
@@ -61,8 +65,10 @@ class DocumentProvider extends ChangeNotifier {
           epgLot: epgLot,
           opgLot: opgLot,
           vpgLot: double.parse(vpgLot),
-          stsLot: "A"));
+          stsLot: "A");
+      String opt = await api.postinsertGc0040(objeto);
       if (opt.contains("200")) {
+        await CreateFileWeb.onStarPdf(objeto, habitante!.nomNic);
         return true;
       } else {
         return false;
@@ -78,8 +84,19 @@ class DocumentProvider extends ChangeNotifier {
     return obj != null;
   }
 
+  Future<bool> getLoteList(String cedula) async {
+    habitante = await api.getHabitante(cedula);
+    listObj = await api.getListGc0032LOT(cedula);
+    return listObj.isNotEmpty;
+  }
+
   showViewEvent() {
     isBloque = !isBloque;
     notifyListeners();
+  }
+
+  Future getObtenerTicket() async {
+    String? resp = await api.getMaxNumDup();
+    idDocTxtController.text = UtilView.getSecuenceString(resp ?? "0", 6);
   }
 }

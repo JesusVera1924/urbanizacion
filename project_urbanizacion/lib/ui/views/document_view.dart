@@ -9,6 +9,10 @@ import 'package:project_urbanizacion/providers/habitante_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/components/white_card.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_acep_canc.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_comentario.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_lotes.dart';
+import 'package:project_urbanizacion/utils/create_file_web.dart';
 import 'package:project_urbanizacion/utils/date_formatter.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
@@ -24,7 +28,6 @@ class DocumentView extends StatefulWidget {
 class _DocumentViewState extends State<DocumentView> {
   //controladores primer tarjeta
 
-  final idDocTxtController = TextEditingController();
   final docTFcxtController = TextEditingController();
   final idTxtController = TextEditingController();
 
@@ -44,8 +47,8 @@ class _DocumentViewState extends State<DocumentView> {
 
   //controladores tercer tarjeta
   int valueInit = 1;
-  Gc0032? objeto;
   final valTxtController = TextEditingController();
+  final encTxtController = TextEditingController();
   final obsTxtController = TextEditingController();
 
   //CONTROLADOR DEL FORMULARIO
@@ -53,14 +56,15 @@ class _DocumentViewState extends State<DocumentView> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    docTFcxtController.text =
+        UtilView.dateFormatDMY(DateTime.now().toIso8601String());
+    Provider.of<DocumentProvider>(context, listen: false).getObtenerTicket();
     super.initState();
   }
 
   @override
   void dispose() {
     idTxtController.dispose();
-    idDocTxtController.dispose();
     docTFcxtController.dispose();
     mdmNTxtController.dispose();
     dirNTxtController.dispose();
@@ -76,30 +80,14 @@ class _DocumentViewState extends State<DocumentView> {
     obsLtTxtController.dispose();
     valTxtController.dispose();
     obsTxtController.dispose();
+    encTxtController.dispose();
     formkey.currentState!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final habitanteProvider = Provider.of<HabitanteProvider>(context);
     final documentProvider = Provider.of<DocumentProvider>(context);
-    void selectDate(String cadena) async {
-      final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2025),
-      );
-      if (picked != null) {
-        switch (cadena) {
-          case 'fecha':
-            docTFcxtController.text = UtilView.dateFormatDMY(picked.toString());
-            break;
-          default:
-        }
-      }
-    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -126,13 +114,14 @@ class _DocumentViewState extends State<DocumentView> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12))),
                           TextFormField(
-                            controller: idDocTxtController,
+                            controller: documentProvider.idDocTxtController,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
                                   RegExp(r'^(?:\+|-)?\d+$')),
                               LengthLimitingTextInputFormatter(15)
                             ],
                             style: CustomLabels.h2,
+                            enabled: false,
                             decoration: CustomInputs.txtInputDecoration2(
                                 hint: '',
                                 icon: Icons.wallet_membership_rounded),
@@ -161,21 +150,9 @@ class _DocumentViewState extends State<DocumentView> {
                           TextFormField(
                             controller: docTFcxtController,
                             style: CustomLabels.h2,
-                            decoration:
-                                CustomInputs.boxInputDecorationDatePicker(
-                                    labelText: "Fecha Documento",
-                                    fc: () => selectDate('fecha')),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'(^[0-9/]*$)')),
-                              DateFormatter()
-                            ],
-                            validator: (value) {
-                              if (value == null || value == "") {
-                                return 'Por favor, introduzca una fecha';
-                              }
-                              return null;
-                            },
+                            decoration: CustomInputs.txtInputDecoration2(
+                                hint: '', icon: Icons.calendar_today),
+                            enabled: false,
                           ),
                         ],
                       ),
@@ -204,9 +181,15 @@ class _DocumentViewState extends State<DocumentView> {
                                   value.length == 13 ||
                                   value.length == 15) {
                                 var resp =
-                                    await documentProvider.getLote(value);
+                                    await documentProvider.getLoteList(value);
 
                                 if (resp) {
+                                  documentProvider.obj =
+                                      await showDialogSelectLotes(
+                                          context, documentProvider.listObj);
+
+                                  documentProvider.obj =
+                                      documentProvider.listObj[0];
                                   mdmNTxtController.text =
                                       "${documentProvider.obj!.mtnLot}";
                                   dirNTxtController.text =
@@ -252,6 +235,27 @@ class _DocumentViewState extends State<DocumentView> {
                         ],
                       ),
                     ),
+                    if (!documentProvider.isBloque)
+                      Container(
+                          margin: const EdgeInsets.only(top: 30),
+                          child: InkWell(
+                              onTap: () {
+                                idTxtController.clear();
+                                mdmNTxtController.clear();
+                                dirNTxtController.clear();
+                                mdmSTxtController.clear();
+                                dirSTxtController.clear();
+                                mdmETxtController.clear();
+                                dirETxtController.clear();
+                                mdmOTxtController.clear();
+                                dirOTxtController.clear();
+                                idATxtController.clear();
+                                idRTxtController.clear();
+                                barrioTxtController.clear();
+                                documentProvider.showViewEvent();
+                              },
+                              child:
+                                  const Icon(Icons.cancel, color: Colors.red)))
                   ],
                 )),
             WhiteCard(
@@ -665,7 +669,9 @@ class _DocumentViewState extends State<DocumentView> {
                                     CustomInputs.boxInputDecorationIconAdd(
                                         icon: Icons.assignment_add,
                                         mensaje: "Observación extendida",
-                                        fc: () {
+                                        fc: () async {
+                                          await showDialogAddComentario(
+                                              context);
                                           //evento de dialogo de las demas observaciones
                                         }),
                               ),
@@ -726,31 +732,29 @@ class _DocumentViewState extends State<DocumentView> {
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(
-                              left: 6, right: 6, bottom: 4),
-                          height: 40,
-                          width: ScreenQueries.instance.customWidth(context, 6),
-                          child: CustomDropdown<Gc0032>.searchRequest(
-                            futureRequest: habitanteProvider.getRequestData,
-                            closedHeaderPadding: const EdgeInsets.all(10),
-                            decoration: CustomDropdownDecoration(
-                                closedFillColor: Colors.grey[500],
-                                expandedFillColor: Colors.blueGrey,
-                                headerStyle: CustomLabels.h3,
-                                hintStyle: CustomLabels.h3,
-                                listItemStyle: CustomLabels.h3),
-                            hintText: 'Seleccionar encargado del pago',
-                            searchHintText: "Busqueda",
-                            noResultFoundText: "No se encontro resultados",
-                            onChanged: (value) {
-                              objeto = value;
-                            },
-                            validator: (p0) {
-                              if (objeto == null) {
-                                return "Este campo es obligatorio";
-                              }
-                              return null;
-                            },
+                          margin: const EdgeInsets.symmetric(horizontal: 6),
+                          width: ScreenQueries.instance.customWidth(context, 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 5),
+                                  child: Text('Encargado de pago',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12))),
+                              TextFormField(
+                                controller: encTxtController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'(^[a-zA-Z ]*$)')),
+                                  LengthLimitingTextInputFormatter(50),
+                                ],
+                                style: CustomLabels.h2,
+                                decoration: CustomInputs.txtInputDecoration2(
+                                    hint: '', icon: Icons.person),
+                              ),
+                            ],
                           ),
                         ),
                         Container(
@@ -818,53 +822,63 @@ class _DocumentViewState extends State<DocumentView> {
                             child: FilledButton(
                               onPressed: () async {
                                 if (formkey.currentState!.validate()) {
-                                  var resp =
-                                      await documentProvider.saveReferencia(
-                                          idDocTxtController.text,
-                                          docTFcxtController.text,
-                                          idTxtController.text,
-                                          mdmNTxtController.text,
-                                          dirNTxtController.text,
-                                          mdmSTxtController.text,
-                                          dirSTxtController.text,
-                                          mdmETxtController.text,
-                                          dirETxtController.text,
-                                          mdmOTxtController.text,
-                                          dirOTxtController.text,
-                                          idATxtController.text,
-                                          idRTxtController.text,
-                                          obsLtTxtController.text,
-                                          "$valueInit",
-                                          objeto!.nomNic,
-                                          obsTxtController.text,
-                                          valTxtController.text);
+                                  var respuesta = await dialogAcepCanc(
+                                      context,
+                                      "Notificación",
+                                      Text('Deseas continuar?',
+                                          style: CustomLabels.h3),
+                                      Icons.assignment_turned_in_rounded,
+                                      Colors.green);
 
-                                  if (resp) {
-                                    idDocTxtController.clear();
-                                    docTFcxtController.clear();
-                                    idTxtController.clear();
-                                    mdmNTxtController.clear();
-                                    dirNTxtController.clear();
-                                    mdmSTxtController.clear();
-                                    dirSTxtController.clear();
-                                    mdmETxtController.clear();
-                                    dirETxtController.clear();
-                                    mdmOTxtController.clear();
-                                    dirOTxtController.clear();
-                                    idATxtController.clear();
-                                    idRTxtController.clear();
-                                    obsLtTxtController.clear();
-                                    barrioTxtController.clear();
-                                    obsTxtController.clear();
-                                    valTxtController.clear();
-                                    objeto = null;
-                                    valueInit = 1;
+                                  if (respuesta) {
+                                    var resp =
+                                        await documentProvider.saveReferencia(
+                                            docTFcxtController.text,
+                                            idTxtController.text,
+                                            mdmNTxtController.text,
+                                            dirNTxtController.text,
+                                            mdmSTxtController.text,
+                                            dirSTxtController.text,
+                                            mdmETxtController.text,
+                                            dirETxtController.text,
+                                            mdmOTxtController.text,
+                                            dirOTxtController.text,
+                                            idATxtController.text,
+                                            idRTxtController.text,
+                                            obsLtTxtController.text,
+                                            "$valueInit",
+                                            encTxtController.text,
+                                            obsTxtController.text,
+                                            valTxtController.text);
 
-                                    UtilView.messageAccess(context,
-                                        "Notificación", "Proceso Exitoso");
-                                  } else {
-                                    UtilView.messageError(context, "Error",
-                                        "Error del formulario");
+                                    if (resp) {
+                                      documentProvider.idDocTxtController
+                                          .clear();
+                                      docTFcxtController.clear();
+                                      idTxtController.clear();
+                                      mdmNTxtController.clear();
+                                      dirNTxtController.clear();
+                                      mdmSTxtController.clear();
+                                      dirSTxtController.clear();
+                                      mdmETxtController.clear();
+                                      dirETxtController.clear();
+                                      mdmOTxtController.clear();
+                                      dirOTxtController.clear();
+                                      idATxtController.clear();
+                                      idRTxtController.clear();
+                                      obsLtTxtController.clear();
+                                      barrioTxtController.clear();
+                                      obsTxtController.clear();
+                                      valTxtController.clear();
+                                      encTxtController.clear();
+                                      valueInit = 1;
+
+                                      UtilView.messageAccess(context,
+                                          "Notificación", "Proceso Exitoso");
+                                    } else {
+                                      UtilView.messageError(context, "Error",
+                                          "Error del formulario");
+                                    }
                                   }
                                 } else {
                                   UtilView.messageError(
@@ -892,7 +906,7 @@ class _DocumentViewState extends State<DocumentView> {
                             margin: const EdgeInsets.only(left: 5),
                             child: FilledButton(
                               onPressed: () async {
-                                idDocTxtController.clear();
+                                documentProvider.idDocTxtController.clear();
                                 docTFcxtController.clear();
                                 idTxtController.clear();
                                 mdmNTxtController.clear();
@@ -909,7 +923,7 @@ class _DocumentViewState extends State<DocumentView> {
                                 barrioTxtController.clear();
                                 obsTxtController.clear();
                                 valTxtController.clear();
-                                objeto = null;
+                                encTxtController.clear();
                                 valueInit = 1;
                               },
                               style: ButtonStyle(

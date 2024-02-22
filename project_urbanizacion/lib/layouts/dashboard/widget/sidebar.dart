@@ -65,13 +65,20 @@ class _SidebarState extends State<Sidebar> {
           ),
 
           MenuItemSideBar(
-            text: 'COMITE/PERIODO'.toUpperCase(),
-            icon: Icons.groups_outlined,
-            onPressed: () => navigateTo(Flurorouter.comiteRoute),
-            isActive: SideMenuProvider.enableItems
-                ? sideMenuProvider.currentPage == Flurorouter.comiteRoute
-                : false,
-          ),
+              text: 'ORGANIZACIÓN'.toUpperCase(),
+              icon: Icons.groups_outlined,
+              onPressed: () => navigateTo(Flurorouter.comiteRoute),
+              isActive: SideMenuProvider.enableItems
+                  ? sideMenuProvider.currentPage == Flurorouter.comiteRoute
+                  : false),
+          MenuItemSideBar(
+              text: 'CONFIGURACIÓN'.toUpperCase(),
+              icon: Icons.settings,
+              onPressed: () => navigateTo(Flurorouter.organizationRoute),
+              isActive: SideMenuProvider.enableItems
+                  ? sideMenuProvider.currentPage ==
+                      Flurorouter.organizationRoute
+                  : false),
           MenuItemSideBar(
             text: 'GENERAR INF.LOTE'.toUpperCase(),
             icon: Icons.account_balance_wallet_rounded,

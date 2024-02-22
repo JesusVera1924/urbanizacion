@@ -14,14 +14,14 @@ Future<bool> dialogAcepCanc(BuildContext context, String title, Widget body,
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: Row(
             children: [
-              Icon(iconData, color: color, size: 24),
+              Icon(iconData, color: color, size: 28),
               Padding(
                 padding: const EdgeInsets.only(left: 5),
                 child: Text(title,
                     style: TextStyle(
                         color: color,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12)),
+                        fontSize: 14)),
               ),
             ],
           ),

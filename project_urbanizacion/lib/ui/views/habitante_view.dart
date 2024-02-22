@@ -11,6 +11,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart'; */
 import 'package:project_urbanizacion/ui/components/white_card.dart';
 import 'package:flutter/material.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_acep_canc.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_busqueda.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_referencia1.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_referencia2.dart';
@@ -337,56 +338,69 @@ class _HabitanteViewState extends State<HabitanteView> {
                                   onPressed: () async {
                                     if (formkey.currentState!.validate()) {
                                       String? resp;
-                                      if (habitanteProvider.isUpdate) {
-                                        resp = await habitanteProvider
-                                            .updateHabitante(
-                                                valueInit,
-                                                idTextEditingController.text,
-                                                nombreTextEditingController
-                                                    .text,
-                                                valueSx,
-                                                fechaTextEditingController.text,
-                                                telefonoTextEditingController
-                                                    .text,
-                                                correoTextEditingController
-                                                    .text,
-                                                valueCls,
-                                                obsTextEditingController.text);
-                                      } else {
-                                        resp = await habitanteProvider
-                                            .saveHabitante(
-                                                valueInit,
-                                                idTextEditingController.text,
-                                                nombreTextEditingController
-                                                    .text,
-                                                valueSx,
-                                                telefonoTextEditingController
-                                                    .text,
-                                                correoTextEditingController
-                                                    .text,
-                                                valueCls,
-                                                obsTextEditingController.text);
-                                      }
+                                      var oprtD = await dialogAcepCanc(
+                                          context,
+                                          "Notificación",
+                                          Text('Deseas continuar?',
+                                              style: CustomLabels.h3),
+                                          Icons.assignment_turned_in_rounded,
+                                          Colors.green);
 
-                                      if (resp != null) {
-                                        idTextEditingController.clear();
+                                      if (oprtD) {
+                                        if (habitanteProvider.isUpdate) {
+                                          resp = await habitanteProvider
+                                              .updateHabitante(
+                                                  valueInit,
+                                                  idTextEditingController.text,
+                                                  nombreTextEditingController
+                                                      .text,
+                                                  valueSx,
+                                                  fechaTextEditingController
+                                                      .text,
+                                                  telefonoTextEditingController
+                                                      .text,
+                                                  correoTextEditingController
+                                                      .text,
+                                                  valueCls,
+                                                  obsTextEditingController
+                                                      .text);
+                                        } else {
+                                          resp = await habitanteProvider
+                                              .saveHabitante(
+                                                  valueInit,
+                                                  idTextEditingController.text,
+                                                  nombreTextEditingController
+                                                      .text,
+                                                  valueSx,
+                                                  telefonoTextEditingController
+                                                      .text,
+                                                  correoTextEditingController
+                                                      .text,
+                                                  valueCls,
+                                                  obsTextEditingController
+                                                      .text);
+                                        }
 
-                                        correoTextEditingController.clear();
-                                        telefonoTextEditingController.clear();
-                                        fechaTextEditingController.clear();
-                                        obsTextEditingController.clear();
+                                        if (resp != null) {
+                                          idTextEditingController.clear();
 
-                                        UtilView.messageAccess(
-                                            context,
-                                            habitanteProvider.isUpdate
-                                                ? "Actualización Exitosa"
-                                                : "Guardado Exitoso",
-                                            "HABITANTE: ${nombreTextEditingController.text}");
-                                        nombreTextEditingController.clear();
-                                        habitanteProvider.clearVal();
-                                      } else {
-                                        UtilView.messageError(context, "Error",
-                                            "Error del formulario");
+                                          correoTextEditingController.clear();
+                                          telefonoTextEditingController.clear();
+                                          fechaTextEditingController.clear();
+                                          obsTextEditingController.clear();
+
+                                          UtilView.messageAccess(
+                                              context,
+                                              habitanteProvider.isUpdate
+                                                  ? "Actualización Exitosa"
+                                                  : "Guardado Exitoso",
+                                              "HABITANTE: ${nombreTextEditingController.text}");
+                                          nombreTextEditingController.clear();
+                                          habitanteProvider.clearVal();
+                                        } else {
+                                          UtilView.messageError(context,
+                                              "Error", "Error del formulario");
+                                        }
                                       }
                                     } else {
                                       UtilView.messageError(context, "Error",

@@ -1,23 +1,25 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:project_urbanizacion/model/usuario.dart';
+import 'package:project_urbanizacion/model/http/auth_response.dart';
 import 'package:project_urbanizacion/router/router.dart';
 import 'package:project_urbanizacion/services/local_storage.dart';
 import 'package:project_urbanizacion/services/navigation_service.dart';
+import 'package:project_urbanizacion/utils/constantes.dart';
 
 enum AuthStatus { checking, authenticated, notAuthenticated }
 
 class AuthProvider extends ChangeNotifier {
   AuthStatus authStatus = AuthStatus.checking;
-  Usuario? usuario;
+  Authentication? usuario;
 
   AuthProvider() {
     isAuthenticated();
   }
 
-  login(Usuario u) async {
+  login(Authentication u) async {
     usuario = u;
+    Constantes.selectEmpresa = usuario!.empresa[0];
     LocalStorage.prefs.setString('token', "ERRORSINTOKEN");
     LocalStorage.prefs.setString('usuario', json.encode(u.toMap()));
 
@@ -42,7 +44,8 @@ class AuthProvider extends ChangeNotifier {
     }
 
     //logica para verificar el token de llegada
-    usuario = Usuario.fromMap(jsonDecode(user));
+    usuario = Authentication.fromMap(jsonDecode(user));
+    Constantes.selectEmpresa = usuario!.empresa[0];
     await Future.delayed(const Duration(milliseconds: 1000));
     authStatus = AuthStatus.authenticated;
     notifyListeners();

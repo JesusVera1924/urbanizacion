@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project_urbanizacion/model/http/auth_response.dart';
 import 'package:project_urbanizacion/ui/components/custom_outlined_button.dart';
-import 'package:project_urbanizacion/model/usuario.dart';
 import 'package:project_urbanizacion/providers/auth_provider.dart';
 import 'package:project_urbanizacion/providers/login_form_provider.dart';
 import 'package:project_urbanizacion/services/notifications_service.dart';
@@ -22,7 +22,7 @@ class LoginView extends StatelessWidget {
               Provider.of<LoginFormProvider>(context, listen: false);
 
           void sendLogin() async {
-            Usuario? usuario = await loginFormProvider.sendLogin();
+            Authentication? usuario = await loginFormProvider.sendLogin();
             if (usuario != null) {
               authProvider.login(usuario);
             } else {

@@ -7,23 +7,25 @@ import 'package:flutter/services.dart';
 import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/providers/committe_provider.dart';
 import 'package:project_urbanizacion/providers/habitante_provider.dart';
+import 'package:project_urbanizacion/providers/organization_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/components/white_card.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_acep_canc.dart';
-import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 import 'package:provider/provider.dart';
 
-class CommitteView extends StatefulWidget {
-  const CommitteView({Key? key}) : super(key: key);
+class OrganizationView extends StatefulWidget {
+  const OrganizationView({Key? key}) : super(key: key);
 
   @override
-  State<CommitteView> createState() => _CommitteViewState();
+  State<OrganizationView> createState() => _OrganizationViewState();
 }
 
-class _CommitteViewState extends State<CommitteView> {
+class _OrganizationViewState extends State<OrganizationView> {
+  //controladores de caja de textos
+
   //LISTA DE NOMBRES
 
   List<String> listFecha = [];
@@ -33,7 +35,9 @@ class _CommitteViewState extends State<CommitteView> {
   final formkey = GlobalKey<FormState>();
 
   //FOCUS TEXT
-
+  late FocusNode focusIdEmpresa;
+  late FocusNode focusId;
+  late FocusNode focusName;
   late FocusNode focusDir;
   late FocusNode focusEmail;
   late FocusNode focusTlf;
@@ -45,6 +49,9 @@ class _CommitteViewState extends State<CommitteView> {
 
   @override
   void initState() {
+    focusIdEmpresa = FocusNode();
+    focusId = FocusNode();
+    focusName = FocusNode();
     focusDir = FocusNode();
     focusEmail = FocusNode();
     focusTlf = FocusNode();
@@ -52,7 +59,6 @@ class _CommitteViewState extends State<CommitteView> {
     focusComite = FocusNode();
     listFecha = UtilView.generarListaRangoAnios(2020, 2024);
     fechaInicial = listFecha[listFecha.length - 1];
-    //inicializar
     Provider.of<CommitteProvider>(context, listen: false).getRequestData();
     super.initState();
   }
@@ -60,60 +66,82 @@ class _CommitteViewState extends State<CommitteView> {
   @override
   void dispose() {
     //liberacion de enfoques
+    focusIdEmpresa.dispose();
+    focusId.dispose();
+    focusName.dispose();
     focusDir.dispose();
     focusEmail.dispose();
     focusTlf.dispose();
     focusRepLeg.dispose();
     focusComite.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final habitanteProvider = Provider.of<HabitanteProvider>(context);
-    final committeProvider = Provider.of<CommitteProvider>(context);
+    final committeProvider = Provider.of<OrganizationProvider>(context);
+
+    focusIdEmpresa.requestFocus();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: ListView(
         physics: const ClampingScrollPhysics(),
         children: [
           WhiteCard(
-              listWidget: const [],
-              title: "INFORMACIÓN DE LA ORGANIZACIÓN",
+              listWidget: [
+                InkWell(
+                    onTap: () {},
+                    child: const Icon(Icons.search, color: Colors.blueGrey))
+              ],
+              title: "CREAR ORGANIZACIÓN",
               child: Row(
                 children: [
                   SizedBox(
-                    width: ScreenQueries.instance.width(context) / 1.8,
+                    width: ScreenQueries.instance.width(context) / 1.9,
                     child: Form(
                       key: formkey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.end,
                             children: [
                               Container(
                                 margin:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 width: ScreenQueries.instance
-                                    .customWidth(context, 6),
+                                    .customWidth(context, 10),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Padding(
                                         padding: EdgeInsets.only(bottom: 5),
-                                        child: Text('Nombre de organizacion',
+                                        child: Text('Cod.Empresa',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 12))),
                                     TextFormField(
                                       controller:
-                                          committeProvider.nombreTxtController,
+                                          committeProvider.idETxtController,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(2)
+                                      ],
+                                      focusNode: focusIdEmpresa,
                                       style: CustomLabels.h2,
-                                      enabled: false,
+                                      onEditingComplete: () =>
+                                          focusIdEmpresa.requestFocus(),
                                       decoration:
                                           CustomInputs.txtInputDecoration2(
-                                              hint: "Ingresar..",
-                                              icon: Icons.person),
+                                              hint: '',
+                                              icon: Icons.contacts_rounded),
+                                      validator: (value) {
+                                        if (value == null || value == "") {
+                                          return 'Por favor, introduzca un identificacion';
+                                        }
+                                        return null;
+                                      },
                                     ),
                                   ],
                                 ),
@@ -135,22 +163,66 @@ class _CommitteViewState extends State<CommitteView> {
                                     TextFormField(
                                       controller:
                                           committeProvider.idTxtController,
-                                      validator: (value) {
-                                        if (value == null || value == "") {
-                                          return 'Error, Dato requerido*';
-                                        }
-                                        return null;
-                                      },
                                       inputFormatters: [
                                         FilteringTextInputFormatter.allow(
                                             RegExp(r'^(?:\+|-)?\d+$')),
-                                        LengthLimitingTextInputFormatter(15)
+                                        LengthLimitingTextInputFormatter(15),
                                       ],
+                                      focusNode: focusId,
                                       style: CustomLabels.h2,
+                                      onEditingComplete: () =>
+                                          focusName.requestFocus(),
                                       decoration:
                                           CustomInputs.txtInputDecoration2(
                                               hint: '0000000000',
                                               icon: Icons.contacts_rounded),
+                                      validator: (value) {
+                                        if (value == null ||
+                                            value.length <= 9) {
+                                          return 'Por favor, introduzca un identificacion valido';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                width: ScreenQueries.instance
+                                    .customWidth(context, 3.4),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Padding(
+                                        padding: EdgeInsets.only(bottom: 5),
+                                        child: Text('Nombre de organizacion',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12))),
+                                    TextFormField(
+                                      controller:
+                                          committeProvider.nombreTxtController,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'(^[a-zA-Z ]*$)')),
+                                        LengthLimitingTextInputFormatter(50),
+                                      ],
+                                      focusNode: focusName,
+                                      style: CustomLabels.h2,
+                                      onEditingComplete: () =>
+                                          focusDir.requestFocus(),
+                                      decoration:
+                                          CustomInputs.txtInputDecoration2(
+                                              hint: "Ingresar..",
+                                              icon: Icons.person),
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return 'Por favor, introduzca un nombre';
+                                        }
+                                        return null;
+                                      },
                                     ),
                                   ],
                                 ),
@@ -173,8 +245,6 @@ class _CommitteViewState extends State<CommitteView> {
                                       controller: committeProvider
                                           .direccionTxtController,
                                       inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r'(^[a-zA-Z 1-9#.,-]*$)')),
                                         LengthLimitingTextInputFormatter(50),
                                       ],
                                       focusNode: focusDir,
@@ -310,37 +380,40 @@ class _CommitteViewState extends State<CommitteView> {
                                   ],
                                 ),
                               ),
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 8),
+                                height: 40,
+                                width: ScreenQueries.instance
+                                    .customWidth(context, 5),
+                                child: CustomDropdown<Gc0032>.searchRequest(
+                                  futureRequest:
+                                      habitanteProvider.getRequestData,
+                                  decoration: CustomDropdownDecoration(
+                                      closedFillColor: Colors.grey[500],
+                                      expandedFillColor: Colors.blueGrey,
+                                      headerStyle: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                      hintStyle: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                      listItemStyle: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold)),
+                                  hintText:
+                                      'Seleccionar los nombres del comite',
+                                  searchHintText: "Busqueda",
+                                  noResultFoundText:
+                                      "No se encontro resultados",
+                                  onChanged: (value) {
+                                    if (committeProvider.list.length < 5) {
+                                      committeProvider.agregarObjList(value);
+                                    }
+                                  },
+                                ),
+                              ),
                             ],
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 8),
-                            height: 40,
-                            width:
-                                ScreenQueries.instance.customWidth(context, 5),
-                            child: CustomDropdown<Gc0032>.searchRequest(
-                              futureRequest: habitanteProvider.getRequestData,
-                              decoration: CustomDropdownDecoration(
-                                  closedFillColor: Colors.grey[500],
-                                  expandedFillColor: Colors.blueGrey,
-                                  headerStyle: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                  hintStyle: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                  listItemStyle: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold)),
-                              hintText: 'Seleccionar los nombres del comite',
-                              searchHintText: "Busqueda",
-                              noResultFoundText: "No se encontro resultados",
-                              onChanged: (value) {
-                                if (committeProvider.list.length < 5) {
-                                  committeProvider.agregarObjList(value);
-                                }
-                              },
-                            ),
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 13, left: 8),
@@ -350,24 +423,14 @@ class _CommitteViewState extends State<CommitteView> {
                                 FilledButton(
                                   onPressed: () async {
                                     if (formkey.currentState!.validate()) {
-                                      var resp = await dialogAcepCanc(
-                                          context,
-                                          "Notificación",
-                                          Text('Deseas continuar?',
-                                              style: CustomLabels.h3),
-                                          Icons.assignment_turned_in_rounded,
-                                          Colors.green);
-
-                                      if (resp) {
-                                        var resp = await committeProvider
-                                            .updateComite();
-
-                                        if (resp != null) {
-                                          UtilView.messageAccess(
-                                              context,
-                                              "NOTIFIACIÓN",
-                                              "ACTUALIZACION CORRECTA");
-                                        }
+                                      String? opt =
+                                          await committeProvider.saveComite();
+                                      if (opt != null) {
+                                        UtilView.messageAccess(context,
+                                            "Enhorabuena", "Petición exitosa");
+                                      } else {
+                                        UtilView.messageError(context, "Error",
+                                            "Error del formulario");
                                       }
                                     } else {
                                       UtilView.messageError(context, "Error",
@@ -389,8 +452,46 @@ class _CommitteViewState extends State<CommitteView> {
                                       ),
                                     ),
                                   ),
-                                  child: const Text('Guardar Edición'),
+                                  child: const Text('Guardar'),
                                 ),
+                                const SizedBox(width: 10),
+                                FilledButton(
+                                  onPressed: () {
+                                    committeProvider.nombreTxtController
+                                        .clear();
+                                    committeProvider.direccionTxtController
+                                        .clear();
+                                    committeProvider.celularTxtController
+                                        .clear();
+                                    committeProvider.correoTxtController
+                                        .clear();
+                                    committeProvider.idTxtController.clear();
+                                    committeProvider.representanteTxtController
+                                        .clear();
+
+                                    UtilView.messageGeneral(
+                                        context,
+                                        "Cancelado",
+                                        Icons.clear_rounded,
+                                        Colors.red);
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateColor.resolveWith(
+                                      (Set<MaterialState> states) {
+                                        return Colors.redAccent;
+                                      },
+                                    ),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                  ),
+                                  child: const Text('Cancelar'),
+                                )
                               ],
                             ),
                           )
@@ -402,7 +503,7 @@ class _CommitteViewState extends State<CommitteView> {
                     children: [
                       const Padding(
                           padding: EdgeInsets.only(bottom: 5),
-                          child: Text('LISTADO DEL LA ORGANIZACIÓN',
+                          child: Text('LISTADO DEL COMITE',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 12))),
                       Container(
@@ -429,7 +530,7 @@ class _CommitteViewState extends State<CommitteView> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      committeProvider.list[index],
+                                      "${index + 1} - ${committeProvider.list[index]}",
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -449,157 +550,6 @@ class _CommitteViewState extends State<CommitteView> {
                   )
                 ],
               )),
-          WhiteCard(
-              title: "INGRESO DE PERIODO",
-              listWidget: [
-                FilledButton.icon(
-                  onPressed: () async {
-                    if (committeProvider.periodoTxtController.text != "") {
-                      var resp = await dialogAcepCanc(
-                          context,
-                          "Información",
-                          Text('Deseas guardar el periodo :: $fechaInicial'),
-                          Icons.info,
-                          Colors.blueGrey);
-
-                      if (resp) {
-                        String opt = await committeProvider.savePeriodo(
-                            committeProvider.periodoTxtController.text,
-                            fechaInicial);
-
-                        committeProvider.periodoTxtController.text = "";
-                        UtilView.messageAccess(context, "Notificación", opt);
-                      }
-                    } else {
-                      UtilView.messageGeneral(
-                          context,
-                          "Ingresar nombre calbido",
-                          Icons.dangerous,
-                          Colors.red);
-                    }
-                  },
-                  icon: const Icon(Icons.save, size: 18),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        return Colors.green;
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                    ),
-                  ),
-                  label: Text(
-                    'Guardar periodo',
-                    style: CustomLabels.h4,
-                  ),
-                ),
-              ],
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    width: ScreenQueries.instance.customWidth(context, 6),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                            padding: EdgeInsets.only(bottom: 5),
-                            child: Text('Periodo del calbildo',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12))),
-                        TextFormField(
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'(^[a-zA-Z 0-9,#]*$)')),
-                            LengthLimitingTextInputFormatter(50),
-                          ],
-                          controller: committeProvider.periodoTxtController,
-                          style: CustomLabels.h2,
-                          decoration: CustomInputs.txtInputDecoration2(
-                              hint: "Ingresar periodo",
-                              icon: Icons.bookmark_rounded),
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Por favor, introduzca un nombre';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    width: ScreenQueries.instance.customWidth(context, 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                            padding: EdgeInsets.only(bottom: 5),
-                            child: Text('Periodo',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12))),
-                        DropdownButtonFormField<String>(
-                          enableFeedback: false,
-                          hint: const Text('-- Seleccionar --'),
-                          menuMaxHeight: 400,
-                          decoration: CustomInputs.boxInputDecoration3(
-                              icon: Icons.bakery_dining_sharp),
-                          items: listFecha.map((b) {
-                            return DropdownMenuItem(
-                                value: b,
-                                child: Text(
-                                  b.trim(),
-                                  style: const TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold),
-                                  overflow: TextOverflow.ellipsis,
-                                ));
-                          }).toList(),
-                          onChanged: (e) {
-                            fechaInicial = e as String;
-                          },
-                          value: fechaInicial,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    width: ScreenQueries.instance.customWidth(context, 4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                            padding: EdgeInsets.only(bottom: 5),
-                            child: Text('Organización Actual',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12))),
-                        Wrap(
-                          children: [
-                            for (final v in committeProvider.listComitte) ...[
-                              Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  margin: const EdgeInsets.only(left: 5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: Text(v,
-                                      maxLines: 2, style: CustomLabels.h3))
-                            ]
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ))
         ],
       ),
     );

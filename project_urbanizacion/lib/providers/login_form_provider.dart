@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_urbanizacion/api/solicitud_api.dart';
-import 'package:project_urbanizacion/model/usuario.dart';
+import 'package:project_urbanizacion/model/http/auth_response.dart';
 
 class LoginFormProvider extends ChangeNotifier {
   final formkey = GlobalKey<FormState>();
@@ -17,12 +17,12 @@ class LoginFormProvider extends ChangeNotifier {
     }
   }
 
-  Future<Usuario?> sendLogin() async {
+  Future<Authentication?> sendLogin() async {
     final isValid = validateForm();
-    Usuario? u;
+    Authentication? u;
     if (isValid) {
-      //u = await api.login(usuario, password);}
-      u = Usuario(
+      u = await api.login(usuario, password);
+      /* u = Usuario(
           codEmp: "01",
           codPry: "01",
           codUsr: "jesusvera1924",
@@ -35,7 +35,7 @@ class LoginFormProvider extends ChangeNotifier {
           rolUsr: "A",
           clsUsr: "A",
           fexUsr: DateTime.now(),
-          stsUsr: "A");
+          stsUsr: "A"); */
     }
     return u;
   }
