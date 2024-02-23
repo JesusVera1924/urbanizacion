@@ -160,23 +160,27 @@ class CommitteProvider extends ChangeNotifier {
   Future obtenerCommitteActual() async {
     objeto = null;
     listComitte.clear();
-    objeto = await api.getGc0001(Constantes.selectEmpresa.codEmp);
-    if (objeto != null) {
-      if (objeto!.na1Emp != "") {
-        listComitte.add("1 - ${objeto!.na1Emp}");
+    try {
+      objeto = await api.getGc0001(Constantes.selectEmpresa.codEmp);
+      if (objeto != null) {
+        if (objeto!.na1Emp != "") {
+          listComitte.add("1 - ${objeto!.na1Emp}");
+        }
+        if (objeto!.na2Emp != "") {
+          listComitte.add("2 - ${objeto!.na2Emp}");
+        }
+        if (objeto!.na3Emp != "") {
+          listComitte.add("3 - ${objeto!.na3Emp}");
+        }
+        if (objeto!.na4Emp != "") {
+          listComitte.add("4 - ${objeto!.na4Emp}");
+        }
+        if (objeto!.na5Emp != "") {
+          listComitte.add("5 - ${objeto!.na5Emp}");
+        }
       }
-      if (objeto!.na2Emp != "") {
-        listComitte.add("2 - ${objeto!.na2Emp}");
-      }
-      if (objeto!.na3Emp != "") {
-        listComitte.add("3 - ${objeto!.na3Emp}");
-      }
-      if (objeto!.na4Emp != "") {
-        listComitte.add("4 - ${objeto!.na4Emp}");
-      }
-      if (objeto!.na5Emp != "") {
-        listComitte.add("5 - ${objeto!.na5Emp}");
-      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
