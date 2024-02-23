@@ -15,7 +15,8 @@ class CreateFileWeb {
     final PdfTextBoxField propietario =
         document.form.fields[0] as PdfTextBoxField;
     propietario.text = name;
-    propietario.font = PdfStandardFont(PdfFontFamily.helvetica, 11);
+    propietario.font =
+        PdfStandardFont(PdfFontFamily.helvetica, name.length > 35 ? 9 : 12);
 
     final PdfTextBoxField cedula = document.form.fields[1] as PdfTextBoxField;
     cedula.text = objeto.secNic.trim();

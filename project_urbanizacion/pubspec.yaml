@@ -48,6 +48,7 @@ dependencies:
   lottie: ^3.0.0
   syncfusion_flutter_pdf: ^24.2.3
   shared_preferences: ^2.2.2
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0

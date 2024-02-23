@@ -180,7 +180,7 @@ class CommitteProvider extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print('Error: $e');
+      //print('Error: $e');
     }
   }
 
