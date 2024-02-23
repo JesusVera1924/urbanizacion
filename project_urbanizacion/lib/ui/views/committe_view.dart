@@ -11,7 +11,6 @@ import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/components/white_card.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_acep_canc.dart';
-import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 import 'package:provider/provider.dart';

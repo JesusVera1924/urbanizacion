@@ -1,19 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/providers/document_provider.dart';
-import 'package:project_urbanizacion/providers/habitante_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/components/white_card.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_acep_canc.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_comentario.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_lotes.dart';
-import 'package:project_urbanizacion/utils/create_file_web.dart';
-import 'package:project_urbanizacion/utils/date_formatter.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 import 'package:provider/provider.dart';

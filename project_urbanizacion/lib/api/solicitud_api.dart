@@ -11,6 +11,7 @@ import 'package:project_urbanizacion/model/gc0042.dart';
 import 'package:project_urbanizacion/model/http/auth_response.dart';
 
 class SolicitudApi {
+  //192.168.3.57
   static String dominio = "192.168.3.57:8080";
   static String path = "/regularizacion";
 

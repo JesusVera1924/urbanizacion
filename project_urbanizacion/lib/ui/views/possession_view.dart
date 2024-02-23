@@ -1,11 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/providers/bach_provider.dart';
-import 'package:project_urbanizacion/providers/habitante_provider.dart';
 import 'package:project_urbanizacion/providers/possession_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
