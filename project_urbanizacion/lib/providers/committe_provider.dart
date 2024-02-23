@@ -27,7 +27,7 @@ class CommitteProvider extends ChangeNotifier {
     int i = 0;
 
     Gc0001 objeto = Gc0001(
-        codEmp: "01",
+        codEmp: Constantes.selectEmpresa.codEmp,
         nomEmp: nomEmp,
         dirEmp: dirEmp,
         tmvEmp: tmvEmp,
@@ -119,7 +119,7 @@ class CommitteProvider extends ChangeNotifier {
 
     if (objeto != null) {
       Gc0002 gc002 = Gc0002(
-          codEmp: "01",
+          codEmp: Constantes.selectEmpresa.codEmp,
           periodo: periodo,
           cicEmp: cicEmp,
           na1Emp: objeto!.na1Emp,
@@ -160,7 +160,7 @@ class CommitteProvider extends ChangeNotifier {
   Future obtenerCommitteActual() async {
     objeto = null;
     listComitte.clear();
-    objeto = await api.getGc0001();
+    objeto = await api.getGc0001(Constantes.selectEmpresa.codEmp);
     if (objeto != null) {
       if (objeto!.na1Emp != "") {
         listComitte.add("1 - ${objeto!.na1Emp}");

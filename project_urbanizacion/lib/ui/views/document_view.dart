@@ -49,6 +49,9 @@ class _DocumentViewState extends State<DocumentView> {
   //CONTROLADOR DEL FORMULARIO
   final formkey = GlobalKey<FormState>();
 
+  //bloqueo de busqueda
+  bool isBloqueo = true;
+
   @override
   void initState() {
     docTFcxtController.text =
@@ -166,6 +169,7 @@ class _DocumentViewState extends State<DocumentView> {
                                       fontSize: 12))),
                           TextFormField(
                             controller: idTxtController,
+                            enabled: isBloqueo,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
                                   RegExp(r'^(?:\+|-)?\d+$')),
@@ -209,6 +213,7 @@ class _DocumentViewState extends State<DocumentView> {
                                       documentProvider.obj!.bosLot;
 
                                   documentProvider.showViewEvent();
+                                  isBloqueo = !isBloqueo;
                                   UtilView.messageGeneral(
                                       context,
                                       "$value Encontado",
@@ -867,7 +872,8 @@ class _DocumentViewState extends State<DocumentView> {
                                       valTxtController.clear();
                                       encTxtController.clear();
                                       valueInit = 1;
-
+                                      isBloqueo = !isBloqueo;
+                                      documentProvider.showViewEvent();
                                       UtilView.messageAccess(context,
                                           "Notificación", "Proceso Exitoso");
                                     } else {
@@ -920,6 +926,8 @@ class _DocumentViewState extends State<DocumentView> {
                                 valTxtController.clear();
                                 encTxtController.clear();
                                 valueInit = 1;
+                                isBloqueo = !isBloqueo;
+                                documentProvider.showViewEvent();
                               },
                               style: ButtonStyle(
                                 shape: MaterialStateProperty.all<

@@ -3,6 +3,7 @@ import 'package:project_urbanizacion/api/solicitud_api.dart';
 import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/model/gc0032Lot.dart';
 import 'package:project_urbanizacion/model/gc0040.dart';
+import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/create_file_web.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 
@@ -33,7 +34,7 @@ class DocumentProvider extends ChangeNotifier {
       String vpgLot) async {
     try {
       var objeto = Gc0040(
-          codEmp: "01",
+          codEmp: Constantes.selectEmpresa.codEmp,
           numDup: idDocTxtController.text,
           fecDup: UtilView.convertStringToDate(fecDup),
           secNic: secNic,

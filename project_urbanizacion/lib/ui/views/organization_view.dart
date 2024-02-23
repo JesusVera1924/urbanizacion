@@ -5,7 +5,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project_urbanizacion/model/gc0032.dart';
-import 'package:project_urbanizacion/providers/committe_provider.dart';
 import 'package:project_urbanizacion/providers/habitante_provider.dart';
 import 'package:project_urbanizacion/providers/organization_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
@@ -58,7 +57,6 @@ class _OrganizationViewState extends State<OrganizationView> {
     focusComite = FocusNode();
     listFecha = UtilView.generarListaRangoAnios(2020, 2024);
     fechaInicial = listFecha[listFecha.length - 1];
-    Provider.of<CommitteProvider>(context, listen: false).getRequestData();
     super.initState();
   }
 

@@ -124,7 +124,7 @@ class OrganizationProvider extends ChangeNotifier {
 
     if (objeto != null) {
       Gc0002 gc002 = Gc0002(
-          codEmp: "01",
+          codEmp: Constantes.selectEmpresa.codEmp,
           periodo: periodo,
           cicEmp: cicEmp,
           na1Emp: objeto!.na1Emp,

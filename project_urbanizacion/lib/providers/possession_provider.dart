@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_urbanizacion/api/solicitud_api.dart';
 import 'package:project_urbanizacion/model/gc0032Lot.dart';
 import 'package:project_urbanizacion/model/gc0042.dart';
+import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 
 class PossessionProvider extends ChangeNotifier {
@@ -24,7 +25,7 @@ class PossessionProvider extends ChangeNotifier {
       String vpgLot) async {
     try {
       String opt = await api.postinsertGc0042(Gc0042(
-          codEmp: "01",
+          codEmp: Constantes.selectEmpresa.codEmp,
           clsTul: clsTul,
           numTul: numeroTxtController.text,
           fecTul: UtilView.convertStringToDate(fecTul),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_urbanizacion/api/solicitud_api.dart';
 import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/model/gc0032Lot.dart';
+import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 
 class BachProvider extends ChangeNotifier {
@@ -30,7 +31,7 @@ class BachProvider extends ChangeNotifier {
       String bosLot) async {
     try {
       String opt = await api.postinsertGc0032LOT(Gc0032LOT(
-          codEmp: "01",
+          codEmp: Constantes.selectEmpresa.codEmp,
           secNic: uid,
           mtnLot: double.parse(mtnLot),
           dtnLot: dtnLot,

@@ -4,6 +4,7 @@ import 'package:project_urbanizacion/api/solicitud_api.dart';
 import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/model/gc0032a.dart';
 import 'package:project_urbanizacion/model/gc0032c.dart';
+import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 
 class HabitanteProvider extends ChangeNotifier {
@@ -40,7 +41,7 @@ class HabitanteProvider extends ChangeNotifier {
     String? resp;
 
     bool? opt = await api.putGc0032(Gc0032(
-        codEmp: "01",
+        codEmp: Constantes.selectEmpresa.codEmp,
         clsNic: "$tpI",
         secNic: numero,
         nomNic: name,
@@ -73,7 +74,7 @@ class HabitanteProvider extends ChangeNotifier {
     String resp = "";
 
     String? opt = await api.postGc0032(Gc0032(
-        codEmp: "01",
+        codEmp: Constantes.selectEmpresa.codEmp,
         clsNic: "$tpI",
         secNic: numero,
         nomNic: name,
@@ -110,7 +111,7 @@ class HabitanteProvider extends ChangeNotifier {
 
   addReferencia() async {
     listRef.add(Gc0032A(
-        codEmp: "01",
+        codEmp: Constantes.selectEmpresa.codEmp,
         secNic: "",
         secRdh: txtIdentificacion.text,
         nomRdh: txtNombre.text,

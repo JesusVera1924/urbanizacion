@@ -43,13 +43,13 @@ class CreateFileWeb {
         "${objeto.mtnLot + objeto.mtsLot + objeto.mteLot + objeto.mtoLot}";
 
     final PdfTextBoxField descn = document.form.fields[9] as PdfTextBoxField;
-    descn.text =  objeto.dtnLot;
+    descn.text = objeto.dtnLot;
 
     final PdfTextBoxField descs = document.form.fields[10] as PdfTextBoxField;
-    descs.text =  objeto.dtsLot;
-    
+    descs.text = objeto.dtsLot;
+
     final PdfTextBoxField desce = document.form.fields[11] as PdfTextBoxField;
-    desce.text =  objeto.dteLot;
+    desce.text = objeto.dteLot;
 
     final PdfTextBoxField desco = document.form.fields[12] as PdfTextBoxField;
     desco.text = objeto.dtoLot;

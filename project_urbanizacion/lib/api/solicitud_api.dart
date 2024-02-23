@@ -336,8 +336,8 @@ class SolicitudApi {
     }
   }
 
-  Future<Gc0001?> getGc0001() async {
-    var url = Uri.http(dominio, '$path/getCommitte');
+  Future<Gc0001?> getGc0001(String codEmp) async {
+    var url = Uri.http(dominio, '$path/getCommitte', {"codEmp": codEmp});
 
     try {
       //print(url);
