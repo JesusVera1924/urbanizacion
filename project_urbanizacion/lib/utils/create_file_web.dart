@@ -20,6 +20,11 @@ class CreateFileWeb {
 
     final PdfTextBoxField cedula = document.form.fields[1] as PdfTextBoxField;
     cedula.text = objeto.secNic.trim();
+    // Crear un estilo de texto con negrita
+    final PdfFont font =
+        PdfStandardFont(PdfFontFamily.helvetica, 11, style: PdfFontStyle.italic);
+// Asignar la fuente al campo de texto
+    cedula.font = font;
 
     final PdfTextBoxField norte = document.form.fields[2] as PdfTextBoxField;
     norte.text = "${objeto.mtnLot}";
@@ -33,32 +38,34 @@ class CreateFileWeb {
     final PdfTextBoxField oeste = document.form.fields[5] as PdfTextBoxField;
     oeste.text = "${objeto.mtoLot}";
 
-    final PdfTextBoxField dia = document.form.fields[6] as PdfTextBoxField;
-    dia.text = "${DateTime.now().day}";
+    final PdfTextBoxField descn = document.form.fields[6] as PdfTextBoxField;
+    descn.text = objeto.dtnLot;
 
-    final PdfTextBoxField mes = document.form.fields[7] as PdfTextBoxField;
-    mes.text = "${DateTime.now().month}";
+    final PdfTextBoxField descs = document.form.fields[7] as PdfTextBoxField;
+    descs.text = objeto.dtsLot;
 
-    final PdfTextBoxField total = document.form.fields[8] as PdfTextBoxField;
+    final PdfTextBoxField desce = document.form.fields[8] as PdfTextBoxField;
+    desce.text = objeto.dteLot;
+
+    final PdfTextBoxField desco = document.form.fields[9] as PdfTextBoxField;
+    desco.text = objeto.dtoLot;
+
+    final PdfTextBoxField total = document.form.fields[10] as PdfTextBoxField;
     total.text =
         "${objeto.mtnLot + objeto.mtsLot + objeto.mteLot + objeto.mtoLot}";
 
-    final PdfTextBoxField descn = document.form.fields[9] as PdfTextBoxField;
-    descn.text = objeto.dtnLot;
+    final PdfTextBoxField dia = document.form.fields[11] as PdfTextBoxField;
+    dia.text = "${DateTime.now().day}";
 
-    final PdfTextBoxField descs = document.form.fields[10] as PdfTextBoxField;
-    descs.text = objeto.dtsLot;
-
-    final PdfTextBoxField desce = document.form.fields[11] as PdfTextBoxField;
-    desce.text = objeto.dteLot;
-
-    final PdfTextBoxField desco = document.form.fields[12] as PdfTextBoxField;
-    desco.text = objeto.dtoLot;
+    final PdfTextBoxField mes = document.form.fields[12] as PdfTextBoxField;
+    mes.text = "${DateTime.now().month}";
 
     form.setDefaultAppearance(false);
     form.flattenAllFields();
+
     final List<int> bytes = await document.save();
     document.dispose();
+
     await FileSaveHelper.saveAndLaunchFile(bytes, 'certidicado.pdf');
   }
 
