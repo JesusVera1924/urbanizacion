@@ -4,6 +4,7 @@ import 'package:project_urbanizacion/layouts/dashboard/dashboard_layout.dart';
 import 'package:project_urbanizacion/layouts/splash/splash_layout.dart';
 import 'package:project_urbanizacion/providers/auth_provider.dart';
 import 'package:project_urbanizacion/providers/bach_provider.dart';
+import 'package:project_urbanizacion/providers/collection_provider.dart';
 import 'package:project_urbanizacion/providers/committe_provider.dart';
 import 'package:project_urbanizacion/providers/document_provider.dart';
 import 'package:project_urbanizacion/providers/habitante_provider.dart';
@@ -37,6 +38,8 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(lazy: false, create: (_) => DocumentProvider()),
         ChangeNotifierProvider(
             lazy: false, create: (_) => PossessionProvider()),
+        ChangeNotifierProvider(
+            lazy: false, create: (_) => CollectionProvider()),
         ChangeNotifierProvider(
             lazy: false, create: (_) => OrganizationProvider())
       ],

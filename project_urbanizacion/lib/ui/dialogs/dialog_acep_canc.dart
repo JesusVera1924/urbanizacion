@@ -21,7 +21,7 @@ Future<bool> dialogAcepCanc(BuildContext context, String title, Widget body,
                     style: TextStyle(
                         color: color,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14)),
+                        fontSize: 16)),
               ),
             ],
           ),

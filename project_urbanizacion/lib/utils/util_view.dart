@@ -19,6 +19,13 @@ class UtilView {
 
   static Map<int, String> tipoClase = {1: "TRANSFERENCIA", 2: "UNIFICACÍON"};
 
+  static Map<int, String> tpMotivo = {
+    1: "FIESTAS DE MAYO",
+    2: "FIESTAS DE AGOSTO",
+    3: "CONTRIBUCIONES EXTRAS",
+    4: "FIESTA DE HALOWINE DEL MES DE OCTUBRE"
+  };
+
   static Color convertColor(String color) {
     Color colorPrimario = Palette.azulMarino;
     if (color != "") {
@@ -105,6 +112,25 @@ class UtilView {
     if (fix <= log) {
       resp = nuevo.padLeft(log, '0');
     }
+    return resp;
+  }
+
+  static String? validarFecha(String? value) {
+    String? resp;
+
+    if (value == null) {
+      resp = "Se requiere fecha*";
+    } else {
+      DateTime selectedDate = DateTime.now();
+      DateTime currentDate = convertStringToDate(value);
+      int differenceInDays = currentDate.difference(selectedDate).inDays;
+
+      // Verifica si la diferencia es mayor que 180 días
+      if (differenceInDays > 180) {
+        resp = "La fecha no puede ser mayor\na 180 días";
+      }
+    }
+
     return resp;
   }
 }

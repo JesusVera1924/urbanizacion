@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_urbanizacion/api/solicitud_api.dart';
 import 'package:project_urbanizacion/model/http/menu_response.dart';
-import 'package:project_urbanizacion/services/local_storage.dart';
 
 class SideMenuProvider extends ChangeNotifier {
   static late AnimationController menuController;
@@ -52,12 +51,11 @@ class SideMenuProvider extends ChangeNotifier {
 
   static void toggleMenu() {
     (isOpen) ? menuController.reverse() : menuController.forward();
-
     isOpen = !isOpen;
   }
 
   initList() async {
-    codEmp = LocalStorage.prefs.getString('emp');
+    //codEmp = LocalStorage.prefs.getString('emp');
     //final usuario = LocalStorage.prefs.getString('dni');
     //final token = LocalStorage.prefs.getString('token');
 
@@ -70,8 +68,8 @@ class SideMenuProvider extends ChangeNotifier {
     item = listResponse.where((element) => element.clsPry == "I").toList();
   }
 
-  updateModel() {
+/*   updateModel() {
     // ignore: unused_local_variable
     final idModulo = LocalStorage.prefs.getString('idModule');
-  }
+  } */
 }

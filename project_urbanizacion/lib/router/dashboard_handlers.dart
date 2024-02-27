@@ -3,6 +3,7 @@ import 'package:project_urbanizacion/providers/auth_provider.dart';
 import 'package:project_urbanizacion/providers/sidemenu_provider.dart';
 import 'package:project_urbanizacion/router/router.dart';
 import 'package:project_urbanizacion/ui/views/batch_view.dart';
+import 'package:project_urbanizacion/ui/views/collection_view.dart';
 import 'package:project_urbanizacion/ui/views/committe_view.dart';
 import 'package:project_urbanizacion/ui/views/document_view.dart';
 import 'package:project_urbanizacion/ui/views/habitante_view.dart';
@@ -87,6 +88,17 @@ class DashboardHandlers {
         Flurorouter.possessionRoute, "Unificacion de lotes".toUpperCase());
     if (authProvider.authStatus == AuthStatus.authenticated) {
       return const PossessionView();
+    } else {
+      return const LoginView();
+    }
+  });
+
+  static Handler collectionHandlers = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPageUrl(
+        Flurorouter.collectionRoute, "Cobranza".toUpperCase());
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const CollectionView();
     } else {
       return const LoginView();
     }

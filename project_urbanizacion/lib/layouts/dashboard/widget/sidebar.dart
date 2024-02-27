@@ -71,14 +71,7 @@ class _SidebarState extends State<Sidebar> {
               isActive: SideMenuProvider.enableItems
                   ? sideMenuProvider.currentPage == Flurorouter.comiteRoute
                   : false),
-          MenuItemSideBar(
-              text: 'CONFIGURACIÓN'.toUpperCase(),
-              icon: Icons.settings,
-              onPressed: () => navigateTo(Flurorouter.organizationRoute),
-              isActive: SideMenuProvider.enableItems
-                  ? sideMenuProvider.currentPage ==
-                      Flurorouter.organizationRoute
-                  : false),
+
           MenuItemSideBar(
             text: 'GENERAR INF.LOTE'.toUpperCase(),
             icon: Icons.account_balance_wallet_rounded,
@@ -103,6 +96,25 @@ class _SidebarState extends State<Sidebar> {
                 ? sideMenuProvider.currentPage == Flurorouter.possessionRoute
                 : false,
           ),
+          MenuItemSideBar(
+              text: 'COBRANZA'.toUpperCase(),
+              icon: Icons.currency_exchange_outlined,
+              onPressed: () => navigateTo(Flurorouter.collectionRoute),
+              isActive: SideMenuProvider.enableItems
+                  ? sideMenuProvider.currentPage == Flurorouter.collectionRoute
+                  : false),
+
+          const SizedBox(height: 40),
+          const TextSeparator(text: 'Admin'),
+
+          MenuItemSideBar(
+              text: 'CONFIGURACIÓN'.toUpperCase(),
+              icon: Icons.settings,
+              onPressed: () => navigateTo(Flurorouter.organizationRoute),
+              isActive: SideMenuProvider.enableItems
+                  ? sideMenuProvider.currentPage ==
+                      Flurorouter.organizationRoute
+                  : false),
 
           const SizedBox(height: 40),
           const TextSeparator(text: 'Salir'),

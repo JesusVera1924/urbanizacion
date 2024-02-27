@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:project_urbanizacion/model/gc0001.dart';
 import 'package:project_urbanizacion/model/gc0002.dart';
+import 'package:project_urbanizacion/model/gc0020Cob.dart';
 import 'package:project_urbanizacion/model/gc0032.dart';
 import 'package:project_urbanizacion/model/gc0032Lot.dart';
 import 'package:project_urbanizacion/model/gc0032a.dart';
@@ -171,6 +172,23 @@ class SolicitudApi {
       final resquet = await http.post(url,
           body: objeto.toJson(),
           headers: {"Content-type": "application/json;charset=UTF-8"});
+      if (resquet.statusCode != 200) {
+        throw Exception('${resquet.statusCode}');
+      } else {
+        return utf8.decode(resquet.bodyBytes);
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
+  Future<String> postinsertGc0020Cob(Gc0020Cob objeto) async {
+    var url = Uri.http(dominio, '$path/insertGc0020cob');
+
+    final resquet = await http.post(url,
+        body: objeto.toJson(),
+        headers: {"Content-type": "application/json;charset=UTF-8"});
+    try {
       if (resquet.statusCode != 200) {
         throw Exception('${resquet.statusCode}');
       } else {
@@ -456,6 +474,37 @@ class SolicitudApi {
     }
   }
 
+  Future<List<Gc0032LOT>> getAllGc0020cob() async {
+    var url = Uri.http(dominio, '$path/getAllGc0020cob');
+
+    try {
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return parseGc0032LOT(utf8.decode(respuesta.bodyBytes));
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<Gc0032LOT>> getListGc0020cob(String value) async {
+    var url =
+        Uri.http(dominio, '$path/getSecNicAllGc0020cob', {'value': value});
+
+    try {
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return parseGc0032LOT(utf8.decode(respuesta.bodyBytes));
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   //PARSEOS DE LISTA
 
   List<Gc0032> parseGc0032(String respuesta) {
@@ -476,6 +525,11 @@ class SolicitudApi {
   List<Gc0032LOT> parseGc0032LOT(String respuesta) {
     final parseo = jsonDecode(respuesta);
     return parseo.map<Gc0032LOT>((json) => Gc0032LOT.fromMap(json)).toList();
+  }
+
+  List<Gc0032C> parseGc0020Cob(String respuesta) {
+    final parseo = jsonDecode(respuesta);
+    return parseo.map<Gc0020Cob>((json) => Gc0020Cob.fromMap(json)).toList();
   }
 
   // LIST DE PARSEO ----------------------------------------------------------------------------------------------------------------------

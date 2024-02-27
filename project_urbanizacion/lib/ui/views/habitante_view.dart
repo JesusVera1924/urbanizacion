@@ -105,7 +105,7 @@ class _HabitanteViewState extends State<HabitanteView> {
       final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
+        firstDate: DateTime(1950),
         lastDate: DateTime(2025),
       );
       if (picked != null) {
