@@ -109,7 +109,7 @@ List<GridColumn> _buildDataGridForSize(BuildContext context) {
         padding: const EdgeInsets.all(8.0),
         //width: Responsive.isDesktop(context) ? 100 : 80,
         alignment: Alignment.centerLeft,
-        child: Text('PORCENTAJE',
+        child: Text('PORCENTAJE DE LA COBRANZA',
             style: CustomLabels.h2, overflow: TextOverflow.ellipsis),
       ),
     ),

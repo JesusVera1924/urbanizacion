@@ -62,10 +62,6 @@ class Gc0020CobDTS extends DataGridSource {
           alignment: Alignment.center,
           padding: const EdgeInsets.all(4.0),
           child: Text("${row.getCells()[4].value}", style: CustomLabels.h4)),
-      InkWell(
-          onTap: () async {},
-          child: const Tooltip(
-              message: "AGREGAR COBRANZA", child: Icon(Icons.assignment_add)))
     ];
 
     return list;
@@ -75,7 +71,10 @@ class Gc0020CobDTS extends DataGridSource {
   Widget? buildGroupCaptionCellWidget(
       RowColumnIndex rowColumnIndex, String summaryValue) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-        child: Text(summaryValue));
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Text(
+          summaryValue,
+          style: CustomLabels.h3,
+        ));
   }
 }

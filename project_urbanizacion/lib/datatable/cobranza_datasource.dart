@@ -49,10 +49,13 @@ class CobranzaDTS extends DataGridSource {
           child:
               Text(row.getCells()[0].value.toString(), style: CustomLabels.h4)),
       Container(
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           padding: const EdgeInsets.all(4.0),
-          child:
-              Text(row.getCells()[1].value.toString(), style: CustomLabels.h4)),
+          child: Text(
+            row.getCells()[1].value.toString(),
+            style: CustomLabels.h4,
+            maxLines: 3,
+          )),
       Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.all(4.0),
@@ -79,13 +82,26 @@ class CobranzaDTS extends DataGridSource {
             displayText: '%',
             formatValueFixed: 1),
       ),
-      InkWell(
-          onTap: () async {
-            await provider.getListDet(row.getCells()[5].value.movimiento);
-            await showDialogCobranza(context, provider);
-          },
-          child: const Tooltip(
-              message: "DETALLE", child: Icon(Icons.assignment_add)))
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          InkWell(
+              onTap: () async {
+                await provider.getListDet(row.getCells()[5].value.movimiento);
+                await showDialogCobranza(context, provider);
+              },
+              child: const Tooltip(
+                  message: "DETALLE", child: Icon(Icons.remove_red_eye_sharp))),
+          InkWell(
+              onTap: () async {
+                await provider.getListDet(row.getCells()[5].value.movimiento);
+                await showDialogCobranza(context, provider);
+              },
+              child: const Tooltip(
+                  message: "AGREGAR COBRANZA",
+                  child: Icon(Icons.assignment_add))),
+        ],
+      )
     ];
 
     return list;

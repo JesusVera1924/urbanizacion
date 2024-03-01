@@ -7,6 +7,10 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 Future<void> showDialogCobranza(
     BuildContext context, FundraisingProvider provider) async {
+  Gc0020CobDTS cobranzaDataSource = Gc0020CobDTS(context, provider);
+  cobranzaDataSource
+      .addColumnGroup(ColumnGroup(name: "1-cedula", sortGroupRows: true));
+
   await showDialog(
       barrierDismissible: false,
       context: context,
@@ -40,7 +44,7 @@ Future<void> showDialogCobranza(
                 child: SfDataGrid(
                     headerRowHeight: 30,
                     rowHeight: 40,
-                    source: Gc0020CobDTS(context, provider),
+                    source: cobranzaDataSource,
                     allowEditing: true,
                     navigationMode: GridNavigationMode.cell,
                     selectionMode: SelectionMode.single,
