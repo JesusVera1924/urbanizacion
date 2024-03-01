@@ -6,6 +6,7 @@ import 'package:project_urbanizacion/ui/views/batch_view.dart';
 import 'package:project_urbanizacion/ui/views/collection_view.dart';
 import 'package:project_urbanizacion/ui/views/committe_view.dart';
 import 'package:project_urbanizacion/ui/views/document_view.dart';
+import 'package:project_urbanizacion/ui/views/fundraising_view.dart';
 import 'package:project_urbanizacion/ui/views/habitante_view.dart';
 import 'package:project_urbanizacion/ui/views/default_view.dart';
 import 'package:project_urbanizacion/ui/views/login_view.dart';
@@ -99,6 +100,17 @@ class DashboardHandlers {
         Flurorouter.collectionRoute, "Cobranza".toUpperCase());
     if (authProvider.authStatus == AuthStatus.authenticated) {
       return const CollectionView();
+    } else {
+      return const LoginView();
+    }
+  });
+
+  static Handler fundraisingHandlers = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPageUrl(
+        Flurorouter.fundraisingRoute, "Recaudacion de fondos".toUpperCase());
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const FundraisingView();
     } else {
       return const LoginView();
     }

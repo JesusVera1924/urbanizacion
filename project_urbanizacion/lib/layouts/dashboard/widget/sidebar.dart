@@ -103,6 +103,13 @@ class _SidebarState extends State<Sidebar> {
               isActive: SideMenuProvider.enableItems
                   ? sideMenuProvider.currentPage == Flurorouter.collectionRoute
                   : false),
+          MenuItemSideBar(
+              text: 'RECAUDACION'.toUpperCase(),
+              icon: Icons.move_to_inbox_sharp,
+              onPressed: () => navigateTo(Flurorouter.fundraisingRoute),
+              isActive: SideMenuProvider.enableItems
+                  ? sideMenuProvider.currentPage == Flurorouter.fundraisingRoute
+                  : false),
 
           const SizedBox(height: 40),
           const TextSeparator(text: 'Admin'),

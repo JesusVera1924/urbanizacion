@@ -211,6 +211,7 @@ class _CollectionViewState extends State<CollectionView> {
                           TextFormField(
                             style: CustomLabels.h2,
                             maxLines: 5,
+                            controller: obsTxtController,
                             decoration: CustomInputs.txtInputDecoration2(
                                 hint: '', icon: Icons.assignment),
                             validator: (value) {

@@ -20,6 +20,7 @@ class Flurorouter {
   static String documentRoute = '/regularizacion/documento';
   static String possessionRoute = '/regularizacion/possession';
   static String collectionRoute = '/regularizacion/collection';
+  static String fundraisingRoute = '/regularizacion/fundraising';
 
   static void configureRoutes() {
     // Auth Routes
@@ -63,6 +64,10 @@ class Flurorouter {
 
     router.define(collectionRoute,
         handler: DashboardHandlers.collectionHandlers,
+        transitionType: TransitionType.fadeIn);
+
+    router.define(fundraisingRoute,
+        handler: DashboardHandlers.fundraisingHandlers,
         transitionType: TransitionType.fadeIn);
 
     // 404

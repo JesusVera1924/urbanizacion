@@ -10,6 +10,7 @@ import 'package:project_urbanizacion/model/gc0032c.dart';
 import 'package:project_urbanizacion/model/gc0040.dart';
 import 'package:project_urbanizacion/model/gc0042.dart';
 import 'package:project_urbanizacion/model/http/auth_response.dart';
+import 'package:project_urbanizacion/model/http/cobranza.dart';
 
 class SolicitudApi {
   //192.168.3.57
@@ -505,6 +506,36 @@ class SolicitudApi {
     }
   }
 
+  Future<List<Cobranza>> getListCobranza() async {
+    var url = Uri.http(dominio, '$path/getCobranza');
+
+    try {
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return parseCobranza(utf8.decode(respuesta.bodyBytes));
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<Gc0020Cob>> getListCobranzaDet(String value) async {
+    var url = Uri.http(dominio, '$path/getCobranzaDet', {"value": value});
+
+    try {
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return parseGc0020Cob(utf8.decode(respuesta.bodyBytes));
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   //PARSEOS DE LISTA
 
   List<Gc0032> parseGc0032(String respuesta) {
@@ -527,9 +558,14 @@ class SolicitudApi {
     return parseo.map<Gc0032LOT>((json) => Gc0032LOT.fromMap(json)).toList();
   }
 
-  List<Gc0032C> parseGc0020Cob(String respuesta) {
+  List<Gc0020Cob> parseGc0020Cob(String respuesta) {
     final parseo = jsonDecode(respuesta);
     return parseo.map<Gc0020Cob>((json) => Gc0020Cob.fromMap(json)).toList();
+  }
+
+  List<Cobranza> parseCobranza(String respuesta) {
+    final parseo = jsonDecode(respuesta);
+    return parseo.map<Cobranza>((json) => Cobranza.fromMap(json)).toList();
   }
 
   // LIST DE PARSEO ----------------------------------------------------------------------------------------------------------------------
