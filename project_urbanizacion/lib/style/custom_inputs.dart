@@ -179,4 +179,21 @@ class CustomInputs {
               )),
         ));
   }
+
+  static InputDecoration boxInputDecorationIconEvent(
+      {required String label, required IconData icon, required Function fc}) {
+    return InputDecoration(
+        border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.3))),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.3))),
+        isDense: true,
+        labelStyle: const TextStyle(color: Colors.grey, fontSize: 12),
+        contentPadding: const EdgeInsets.all(14),
+        labelText: label,
+        suffixIcon: InkWell(
+          onTap: () => fc(),
+          child: Icon(icon, color: Colors.grey),
+        ));
+  }
 }

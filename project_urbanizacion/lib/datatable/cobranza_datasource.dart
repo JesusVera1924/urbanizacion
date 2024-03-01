@@ -6,6 +6,7 @@ import 'package:project_urbanizacion/providers/fundraising_provider.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_cobranza.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_cobro.dart';
 
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -95,7 +96,7 @@ class CobranzaDTS extends DataGridSource {
           InkWell(
               onTap: () async {
                 await provider.getListDet(row.getCells()[5].value.movimiento);
-                await showDialogCobranza(context, provider);
+                await showDialogCobro(context, provider);
               },
               child: const Tooltip(
                   message: "AGREGAR COBRANZA",
