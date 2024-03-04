@@ -1,41 +1,41 @@
 import 'dart:convert';
 
 class Gc0020Cob {
-  final String codEmp;
-  final String secNic;
-  final String codPto;
-  final String codMov;
-  final String numMov;
-  final String ptoRel;
-  final String codRel;
-  final String numRel;
-  final DateTime fecEmi;
-  final DateTime fecVen;
-  final double valMov;
-  final double sdoMov;
-  final String codCob;
-  final String codBco;
-  final String numCta;
-  final String nunCta;
-  final String girador;
-  final String obsMov;
-  final String ptoNex;
-  final String codNex;
-  final String numNex;
-  final DateTime fecNex;
-  final DateTime fcrNex;
-  final String ncrNex;
-  final String acrNex;
-  final double valNex;
-  final String stsNex;
-  final String codWmw;
-  final String numWmw;
-  final DateTime fecWmw;
-  final String codDiv;
-  final double cotDiv;
-  final String scsMov;
-  final String sosMov;
-  final String stsMov;
+  String codEmp;
+  String secNic;
+  String codPto;
+  String codMov;
+  String numMov;
+  String ptoRel;
+  String codRel;
+  String numRel;
+  DateTime fecEmi;
+  DateTime fecVen;
+  double valMov;
+  double sdoMov;
+  String codCob;
+  String codBco;
+  String numCta;
+  String nunCta;
+  String girador;
+  String obsMov;
+  String ptoNex;
+  String codNex;
+  String numNex;
+  dynamic fecNex;
+  DateTime fcrNex;
+  String ncrNex;
+  String acrNex;
+  double valNex;
+  String stsNex;
+  String codWmw;
+  String numWmw;
+  dynamic fecWmw;
+  String codDiv;
+  double cotDiv;
+  String scsMov;
+  String sosMov;
+  String stsMov;
 
   Gc0020Cob({
     required this.codEmp,
@@ -101,15 +101,21 @@ class Gc0020Cob {
         ptoNex: json["pto_nex"],
         codNex: json["cod_nex"],
         numNex: json["num_nex"],
-        fecNex: DateTime.parse(json["fec_nex"]),
-        fcrNex: DateTime.parse(json["fcr_nex"]),
+        fecNex: json["fec_nex"] != null
+            ? DateTime.parse(json["fec_nex"])
+            : DateTime.now(),
+        fcrNex: json["fcr_nex"] != null
+            ? DateTime.parse(json["fcr_nex"])
+            : DateTime.now(),
         ncrNex: json["ncr_nex"],
         acrNex: json["acr_nex"],
         valNex: json["val_nex"]?.toDouble(),
         stsNex: json["sts_nex"],
         codWmw: json["cod_wmw"],
         numWmw: json["num_wmw"],
-        fecWmw: DateTime.parse(json["fec_wmw"]),
+        fecWmw: json["fec_wmw"] != null
+            ? DateTime.parse(json["fec_wmw"])
+            : DateTime.now(),
         codDiv: json["cod_div"],
         cotDiv: json["cot_div"]?.toDouble(),
         scsMov: json["scs_mov"],

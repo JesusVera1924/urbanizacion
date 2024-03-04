@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:project_urbanizacion/providers/bach_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
+import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 
@@ -21,6 +22,7 @@ Future<void> showDialogAddTerreno(
   final dirOTxtController = TextEditingController();
   final idRTxtController = TextEditingController();
   final barrioTxtController = TextEditingController();
+  final coordenadaTxtController = TextEditingController();
 
   await showDialog(
       barrierDismissible: false,
@@ -392,7 +394,7 @@ Future<void> showDialogAddTerreno(
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 6),
                             width:
-                                ScreenQueries.instance.customWidth(context, 4),
+                                ScreenQueries.instance.customWidth(context, 8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -407,6 +409,39 @@ Future<void> showDialogAddTerreno(
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'(^[a-zA-Z ]*$)')),
+                                    LengthLimitingTextInputFormatter(50)
+                                  ],
+                                  style: CustomLabels.h2,
+                                  decoration: CustomInputs.txtInputDecoration2(
+                                      hint: '', icon: Icons.contacts_rounded),
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return 'Por favor, introduzca un valor';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 6),
+                            width:
+                                ScreenQueries.instance.customWidth(context, 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                    padding: EdgeInsets.only(bottom: 5),
+                                    child: Text('Coordenada',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12))),
+                                TextFormField(
+                                  controller: coordenadaTxtController,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(Constantes.ip)),
                                     LengthLimitingTextInputFormatter(50)
                                   ],
                                   style: CustomLabels.h2,
@@ -450,7 +485,8 @@ Future<void> showDialogAddTerreno(
                       dirOTxtController.text,
                       provider.idATxtController.text,
                       idRTxtController.text,
-                      barrioTxtController.text);
+                      barrioTxtController.text,
+                      "");
 
                   if (resp) {
                     UtilView.messageAccess(

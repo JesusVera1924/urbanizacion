@@ -11,6 +11,7 @@ import 'package:project_urbanizacion/model/gc0040.dart';
 import 'package:project_urbanizacion/model/gc0042.dart';
 import 'package:project_urbanizacion/model/http/auth_response.dart';
 import 'package:project_urbanizacion/model/http/cobranza.dart';
+import 'package:project_urbanizacion/model/http/historial.dart';
 
 class SolicitudApi {
   //192.168.3.57
@@ -185,6 +186,24 @@ class SolicitudApi {
 
   Future<String> postinsertGc0020Cob(Gc0020Cob objeto) async {
     var url = Uri.http(dominio, '$path/insertGc0020cob');
+
+    final resquet = await http.post(url,
+        body: objeto.toJson(),
+        headers: {"Content-type": "application/json;charset=UTF-8"});
+    try {
+      if (resquet.statusCode != 200) {
+        throw Exception('${resquet.statusCode}');
+      } else {
+        return utf8.decode(resquet.bodyBytes);
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
+  Future<String> postinsertGc0020Cobranza(
+      Gc0020Cob objeto, String value) async {
+    var url = Uri.http(dominio, '$path/insertCobranzaCab', {"value": value});
 
     final resquet = await http.post(url,
         body: objeto.toJson(),
@@ -536,6 +555,40 @@ class SolicitudApi {
     }
   }
 
+  Future<List<Historial>> getAllCobranzaHist(String value) async {
+    var url = Uri.http(dominio, '$path/getAllCobranzaHist', {"value": value});
+
+    try {
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return parseHistorial(utf8.decode(respuesta.bodyBytes));
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<Gc0020Cob?> getCobranzaCab(String value, String secnic) async {
+    var url = Uri.http(
+        dominio, '$path/getCobranzaCab', {"nummov": value, "secnic": secnic});
+
+    try {
+      //print(url);
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return utf8.decode(respuesta.bodyBytes) != ""
+            ? Gc0020Cob.fromJson(utf8.decode(respuesta.bodyBytes))
+            : null;
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
   //PARSEOS DE LISTA
 
   List<Gc0032> parseGc0032(String respuesta) {
@@ -566,6 +619,11 @@ class SolicitudApi {
   List<Cobranza> parseCobranza(String respuesta) {
     final parseo = jsonDecode(respuesta);
     return parseo.map<Cobranza>((json) => Cobranza.fromMap(json)).toList();
+  }
+
+  List<Historial> parseHistorial(String respuesta) {
+    final parseo = jsonDecode(respuesta);
+    return parseo.map<Historial>((json) => Historial.fromMap(json)).toList();
   }
 
   // LIST DE PARSEO ----------------------------------------------------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,9 +9,13 @@ import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
+import 'package:project_urbanizacion/utils/util_view.dart';
 
-Future<void> showDialogCobro(
-    BuildContext context, FundraisingProvider provider) async {
+Future<String> showDialogCobro(
+    BuildContext context, FundraisingProvider provider, String id) async {
+  TextEditingController txt = TextEditingController();
+  String valueInit = "EF";
+  String resp = "0";
   await showDialog(
       barrierDismissible: false,
       context: context,
@@ -57,30 +63,90 @@ Future<void> showDialogCobro(
                       hintText: 'Seleccionar los nombres del comite',
                       searchHintText: "Busqueda",
                       noResultFoundText: "No se encontro resultados",
-                      onChanged: (value) {
+                      onChanged: (value) async {
                         setState(() => provider.selectHabitante = value);
+                        bool opt = await provider.getCobranza(id);
+                        if (!opt) {
+                          UtilView.messageError(
+                              context, "NOTIFICACIÓN", "NO ENCONTRADO");
+                          Navigator.of(context).pop();
+                        }
                       },
                     ),
                   ),
                   const SizedBox(height: 8),
                   if (provider.selectHabitante != null)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 5),
-                      height: 50,
-                      child: TextFormField(
-                        decoration: CustomInputs.boxInputDecorationIconEvent(
-                            label: "VALOR A ABONAR",
-                            fc: () {},
-                            icon: Icons.save),
-                        style: CustomLabels.h2,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(Constantes.decimal)),
-                          LengthLimitingTextInputFormatter(6),
-                        ],
-                      ),
-                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 40,
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            child: DropdownButtonFormField<String>(
+                              value: valueInit,
+                              menuMaxHeight: 230,
+                              decoration: CustomInputs.boxInputDecoration3(
+                                  icon: Icons.monetization_on),
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              items: UtilView.tipoOtrosPagos
+                                  .map((key, value) {
+                                    return MapEntry(
+                                        value,
+                                        DropdownMenuItem(
+                                          value: key,
+                                          child: Text(value,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: CustomLabels.h3),
+                                        ));
+                                  })
+                                  .values
+                                  .toList(),
+                              onChanged: (value) {
+                                valueInit = value as String;
+                              },
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            height: 50,
+                            child: TextFormField(
+                              controller: txt,
+                              decoration:
+                                  CustomInputs.boxInputDecorationIconEvent(
+                                      label: "VALOR A ABONAR",
+                                      fc: () async {
+                                        if (txt.text != "") {
+                                          bool opt =
+                                              await provider.savePass(txt.text);
+                                          if (opt) {
+                                            UtilView.messageAccess(
+                                                context,
+                                                "Notificación",
+                                                "Proceso Exitoso");
+                                            resp = txt.text;
+                                            Navigator.of(context).pop();
+                                          } else {
+                                            UtilView.messageError(context,
+                                                "Notificación", "Error..");
+                                          }
+                                        }
+                                      },
+                                      icon: Icons.save),
+                              style: CustomLabels.h2,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(Constantes.decimal)),
+                                LengthLimitingTextInputFormatter(6),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                 ],
               ),
             ),
@@ -94,9 +160,7 @@ Future<void> showDialogCobro(
                   }
                   return Colors.transparent;
                 })),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+                onPressed: () => Navigator.of(context).pop(),
                 child: const Text('Cancelar',
                     style: TextStyle(
                         fontSize: 14,
@@ -107,4 +171,5 @@ Future<void> showDialogCobro(
           );
         });
       });
+  return resp;
 }

@@ -35,7 +35,14 @@ class _FundraisingViewState extends State<FundraisingView> {
         physics: const ClampingScrollPhysics(),
         children: [
           WhiteCard(
-              listWidget: const [],
+              listWidget: [
+                InkWell(
+                  onTap: () {
+                    provider.getAllList();
+                  },
+                  child: const Icon(Icons.refresh),
+                )
+              ],
               title: "REALIZAR COBRANZA",
               child: SfDataGridTheme(
                   data: SfDataGridThemeData(

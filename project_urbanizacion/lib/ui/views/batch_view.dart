@@ -33,6 +33,7 @@ class _BatchtViewState extends State<BatchtView> {
 
   final idRTxtController = TextEditingController();
   final barrioTxtController = TextEditingController();
+  final coordenadaTxtController = TextEditingController();
 
   //CONTROLADOR DEL FORMULARIO
   final formkey = GlobalKey<FormState>();
@@ -49,6 +50,7 @@ class _BatchtViewState extends State<BatchtView> {
   late FocusNode focusIdTa;
   late FocusNode focusIdTr;
   late FocusNode focusBarrio;
+  late FocusNode focusCordenada;
 
   @override
   void initState() {
@@ -64,6 +66,7 @@ class _BatchtViewState extends State<BatchtView> {
     focusIdTa = FocusNode();
     focusIdTr = FocusNode();
     focusBarrio = FocusNode();
+    focusCordenada = FocusNode();
     Provider.of<BachProvider>(context, listen: false).getObtenerTicket();
     super.initState();
   }
@@ -83,6 +86,7 @@ class _BatchtViewState extends State<BatchtView> {
     focusIdTa.dispose();
     focusIdTr.dispose();
     focusBarrio.dispose();
+    focusCordenada.dispose();
     //LIBERACION DE CONTROLADORES
     idTextEditingController.dispose();
     mdmNTxtController.dispose();
@@ -95,6 +99,7 @@ class _BatchtViewState extends State<BatchtView> {
     dirOTxtController.dispose();
     idRTxtController.dispose();
     barrioTxtController.dispose();
+    coordenadaTxtController.dispose();
     formkey.currentState!.dispose();
     super.dispose();
   }
@@ -236,7 +241,30 @@ class _BatchtViewState extends State<BatchtView> {
               )),
           WhiteCard(
               title: "INFORMACION DE LOTE",
-              listWidget: const [],
+              listWidget: [
+                TextButton(
+                    onPressed: () async {
+                      await bachProvider.openFileExplorer(context);
+                    },
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                      overlayColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.hovered)) {
+                            return Colors.greenAccent;
+                          }
+                          return Colors.transparent;
+                        },
+                      ),
+                      mouseCursor: MaterialStateProperty.all<MouseCursor>(
+                          SystemMouseCursors.click),
+                    ),
+                    child: Text('SUBIR IMAGEN',
+                        style: CustomLabels.h4.copyWith(
+                            decoration: TextDecoration.underline,
+                            color: Colors.black)))
+              ],
               child: Form(
                 key: formkey,
                 child: Column(
@@ -613,6 +641,33 @@ class _BatchtViewState extends State<BatchtView> {
                           ),
                         ),
                         Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          width: ScreenQueries.instance.customWidth(context, 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 5),
+                                  child: Text('Coordena del lote',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12))),
+                              TextFormField(
+                                controller: coordenadaTxtController,
+                                focusNode: focusCordenada,
+                                style: CustomLabels.h2,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'(^[a-zA-Z ]*$)')),
+                                  LengthLimitingTextInputFormatter(50),
+                                ],
+                                decoration: CustomInputs.txtInputDecoration2(
+                                    hint: "", icon: Icons.location_on_sharp),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
                           margin: const EdgeInsets.only(top: 25, left: 10),
                           child: FilledButton(
                             onPressed: () async {
@@ -638,7 +693,8 @@ class _BatchtViewState extends State<BatchtView> {
                                       dirOTxtController.text,
                                       bachProvider.idATxtController.text,
                                       idRTxtController.text,
-                                      barrioTxtController.text);
+                                      barrioTxtController.text,
+                                      coordenadaTxtController.text);
 
                                   if (resp) {
                                     idTextEditingController.clear();

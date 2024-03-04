@@ -4,9 +4,9 @@ import 'package:project_urbanizacion/model/gc0001.dart';
 import 'package:project_urbanizacion/model/usuario.dart';
 
 class Authentication {
-  final Usuario usuario;
-  final String token;
-  final List<Gc0001> empresa;
+  Usuario usuario;
+  String token;
+  List<Gc0001> empresa;
 
   Authentication({
     required this.usuario,

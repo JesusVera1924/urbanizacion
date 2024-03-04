@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 class Cobranza {
-  final String movimiento;
-  final String titulo;
-  final String subtitulo;
-  final int couta;
-  final double total;
-  final int contar;
+  String movimiento;
+  String titulo;
+  String subtitulo;
+  int couta;
+  double total;
+  int contar;
 
   Cobranza({
     required this.movimiento,

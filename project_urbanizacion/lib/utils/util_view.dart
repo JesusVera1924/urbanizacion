@@ -19,6 +19,12 @@ class UtilView {
 
   static Map<int, String> tipoClase = {1: "TRANSFERENCIA", 2: "UNIFICACÍON"};
 
+  static Map<String, String> tipoOtrosPagos = {
+    "EF": "EFECTIVO",
+    "CH": "CHEQUE",
+    "DP": "DEPOSITO"
+  };
+
   static Map<int, String> tpMotivo = {
     1: "FIESTAS DE MAYO",
     2: "FIESTAS DE AGOSTO",

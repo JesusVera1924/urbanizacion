@@ -20,7 +20,9 @@ class CobranzaDTS extends DataGridSource {
   }
 
   void buildDataGridRows() {
+    int opt = 0;
     _dataGridRows = provider.list.map<DataGridRow>((Cobranza team) {
+      opt++;
       return DataGridRow(cells: <DataGridCell>[
         DataGridCell<String>(columnName: '1-titulo', value: team.titulo),
         DataGridCell<String>(columnName: '2-subtitulo', value: team.subtitulo),
@@ -29,7 +31,8 @@ class CobranzaDTS extends DataGridSource {
         DataGridCell<double>(
             columnName: '5-porcentaje',
             value: ((team.total / (team.contar * team.couta))) * 100),
-        DataGridCell<Cobranza>(columnName: '6-acciones', value: team)
+        DataGridCell<Cobranza>(columnName: '6-acciones', value: team),
+        DataGridCell<int>(columnName: 'index', value: opt),
       ]);
     }).toList();
   }
@@ -83,26 +86,47 @@ class CobranzaDTS extends DataGridSource {
             displayText: '%',
             formatValueFixed: 1),
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          InkWell(
-              onTap: () async {
-                await provider.getListDet(row.getCells()[5].value.movimiento);
-                await showDialogCobranza(context, provider);
-              },
-              child: const Tooltip(
-                  message: "DETALLE", child: Icon(Icons.remove_red_eye_sharp))),
-          InkWell(
-              onTap: () async {
-                await provider.getListDet(row.getCells()[5].value.movimiento);
-                await showDialogCobro(context, provider);
-              },
-              child: const Tooltip(
-                  message: "AGREGAR COBRANZA",
-                  child: Icon(Icons.assignment_add))),
-        ],
-      )
+      if (row.getCells()[3].value != 0)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+                onTap: () async {
+                  await provider.getListDet(row.getCells()[5].value.movimiento);
+                  await showDialogCobranza(context, provider);
+                },
+                child: const Tooltip(
+                    message: "DETALLE",
+                    child: Icon(Icons.remove_red_eye_sharp))),
+            InkWell(
+                onTap: () async {
+                  await provider.getListDet(row.getCells()[5].value.movimiento);
+                  //String resp =
+                  await showDialogCobro(
+                      context, provider, row.getCells()[5].value.movimiento);
+                  /* if (resp != "0") {
+                    for (var element in provider.list) {
+                      if (element.movimiento ==
+                          row.getCells()[5].value.movimiento) {
+                        element.total = element.total - double.parse(resp);
+                        _dataGridRows[row.getCells()[6].value]
+                            .getCells()[3]
+                            .value = element.total;
+                      }
+                    }
+                    notifyDataSourceListeners();
+                  } */
+                },
+                child: const Tooltip(
+                    message: "AGREGAR COBRANZA",
+                    child: Icon(Icons.assignment_add))),
+          ],
+        )
+      else
+        Icon(
+          Icons.check_circle,
+          color: Colors.green[800],
+        )
     ];
 
     return list;

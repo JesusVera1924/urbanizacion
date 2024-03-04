@@ -6,6 +6,7 @@ class Constantes {
   //EXPRESIONES IRREGULARES -------------------------------------------------------------------------------------------------------------
   //SOLO NUMEROS
   static const String numeros = r'^(?:\+|-)?\d+$';
+  static const String ip = r'^(?:\+|-)?\d*\.?\d+$';
   //SOLO FECHAS
   static const String fecha =
       r'^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[/\\/](19|20)\d{2}$';

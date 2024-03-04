@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_urbanizacion/datatable/gc0020cob_datasource.dart';
+import 'package:project_urbanizacion/datatable/historial_datasource.dart';
 import 'package:project_urbanizacion/providers/fundraising_provider.dart';
 import 'package:project_urbanizacion/style/palette.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -7,9 +7,9 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 Future<void> showDialogCobranza(
     BuildContext context, FundraisingProvider provider) async {
-  Gc0020CobDTS cobranzaDataSource = Gc0020CobDTS(context, provider);
+  HistorialDTS cobranzaDataSource = HistorialDTS(context, provider);
   cobranzaDataSource
-      .addColumnGroup(ColumnGroup(name: "1-cedula", sortGroupRows: true));
+      .addColumnGroup(ColumnGroup(name: "Identificación", sortGroupRows: true));
 
   await showDialog(
       barrierDismissible: false,
@@ -49,9 +49,12 @@ Future<void> showDialogCobranza(
                     navigationMode: GridNavigationMode.cell,
                     selectionMode: SelectionMode.single,
                     allowExpandCollapseGroup: true,
+                    autoExpandGroups: false,
+                    groupCaptionTitleFormat:
+                        '{Key} // Cobranzas pendientes: {ItemsCount}',
                     columns: [
                       GridColumn(
-                          columnName: '1-cedula',
+                          columnName: 'Identificación',
                           allowEditing: false,
                           columnWidthMode: ColumnWidthMode.fitByCellValue,
                           label: Container(
@@ -122,15 +125,14 @@ Future<void> showDialogCobranza(
                                     fontWeight: FontWeight.bold),
                               ))),
                       GridColumn(
-                          columnName: '6-acciones',
-                          width: 40,
-                          allowEditing: false,
+                          columnName: '6-detalle',
+                          columnWidthMode: ColumnWidthMode.fitByColumnName,
                           label: Container(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
                               alignment: Alignment.center,
                               child: Text(
-                                ''.toUpperCase(),
+                                'PAGADOS'.toUpperCase(),
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: Colors.white,
