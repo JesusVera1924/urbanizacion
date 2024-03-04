@@ -37,9 +37,7 @@ class _FundraisingViewState extends State<FundraisingView> {
           WhiteCard(
               listWidget: [
                 InkWell(
-                  onTap: () {
-                    provider.getAllList();
-                  },
+                  onTap: () async => await provider.getAllList(),
                   child: const Icon(Icons.refresh),
                 )
               ],

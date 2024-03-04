@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project_urbanizacion/model/gc0032lot.dart';
 import 'package:project_urbanizacion/providers/bach_provider.dart';
 import 'package:project_urbanizacion/providers/possession_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
@@ -46,6 +47,8 @@ class _PossessionViewState extends State<PossessionView> {
   void initState() {
     Provider.of<PossessionProvider>(context, listen: false).getObtenerTicket();
     Provider.of<BachProvider>(context, listen: false).getObtenerTicket();
+    fechaTxtController.text =
+        UtilView.dateFormatDMY(DateTime.now().toIso8601String());
     super.initState();
   }
 
@@ -64,26 +67,7 @@ class _PossessionViewState extends State<PossessionView> {
 
   @override
   Widget build(BuildContext context) {
-    final batchProvider = Provider.of<BachProvider>(context);
     final possessionProvider = Provider.of<PossessionProvider>(context);
-
-    void selectDate(String cadena) async {
-      final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2025),
-      );
-      if (picked != null) {
-        switch (cadena) {
-          case 'fecha':
-            fechaTxtController.text = UtilView.dateFormatDMY(picked.toString());
-            break;
-          default:
-        }
-      }
-    }
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Form(
@@ -127,6 +111,40 @@ class _PossessionViewState extends State<PossessionView> {
                                 validator: (value) {
                                   if (value == null || value == "") {
                                     return 'Por favor, introduzca un valor';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 6),
+                          width:
+                              ScreenQueries.instance.customWidth(context, 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 5),
+                                  child: Text('Fecha documento',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12))),
+                              TextFormField(
+                                controller: fechaTxtController,
+                                style: CustomLabels.h2,
+                                decoration: CustomInputs.txtInputDecoration2(
+                                    hint: "", icon: Icons.calendar_today),
+                                enabled: false,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'(^[0-9/]*$)')),
+                                  DateFormatter()
+                                ],
+                                validator: (value) {
+                                  if (value == null || value == "") {
+                                    return 'Por favor, introduzca una fecha';
                                   }
                                   return null;
                                 },
@@ -183,41 +201,6 @@ class _PossessionViewState extends State<PossessionView> {
                             children: [
                               const Padding(
                                   padding: EdgeInsets.only(bottom: 5),
-                                  child: Text('Fecha documento',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12))),
-                              TextFormField(
-                                controller: fechaTxtController,
-                                style: CustomLabels.h2,
-                                decoration:
-                                    CustomInputs.boxInputDecorationDatePicker(
-                                        labelText: "Fecha Documento",
-                                        fc: () => selectDate('fecha')),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'(^[0-9/]*$)')),
-                                  DateFormatter()
-                                ],
-                                validator: (value) {
-                                  if (value == null || value == "") {
-                                    return 'Por favor, introduzca una fecha';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 6),
-                          width:
-                              ScreenQueries.instance.customWidth(context, 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                  padding: EdgeInsets.only(bottom: 5),
                                   child: Text('Identificación',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -253,7 +236,10 @@ class _PossessionViewState extends State<PossessionView> {
                       onPressed: () async {
                         if (idTxtController.text != "") {
                           await showDialogAddTerreno(
-                              context, batchProvider, idTxtController.text);
+                            context,
+                            possessionProvider,
+                            idTxtController.text,
+                          );
                         } else {
                           UtilView.messageInfo(context, "Advertencia",
                               "[Identificación]\nNo puede ir vacio");
@@ -278,7 +264,10 @@ class _PossessionViewState extends State<PossessionView> {
                         ),
                         // Otros estilos de botón
                       ),
-                      child: Text('Crear Terreno',
+                      child: Text(
+                          possessionProvider.obj == null
+                              ? 'CREAR TERRENO'
+                              : "INFORMACIÓN DE TERRENO",
                           style: CustomLabels.h4.copyWith(
                               decoration: TextDecoration.underline,
                               color: Colors.black)))
@@ -309,6 +298,16 @@ class _PossessionViewState extends State<PossessionView> {
                                   LengthLimitingTextInputFormatter(5)
                                 ],
                                 style: CustomLabels.h2,
+                                onChanged: (value) async {
+                                  if (value.length == 5) {
+                                    await possessionProvider
+                                        .getObtenerInfLot(value);
+                                    if (possessionProvider.obj != null) {
+                                      idRTxtController.text =
+                                          "${possessionProvider.obj?.ntrLot}";
+                                    }
+                                  }
+                                },
                                 decoration: CustomInputs.txtInputDecoration2(
                                     hint: '', icon: Icons.contacts_rounded),
                                 validator: (value) {

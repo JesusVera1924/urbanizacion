@@ -428,6 +428,24 @@ class SolicitudApi {
     }
   }
 
+  Future<Gc0032LOT?> getGc0032LOTID(String cedula) async {
+    var url = Uri.http(dominio, '$path/getInfLoteId', {"value": cedula});
+
+    try {
+      //print(url);
+      final respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        return utf8.decode(respuesta.bodyBytes) != ""
+            ? Gc0032LOT.fromJson(utf8.decode(respuesta.bodyBytes))
+            : null;
+      } else {
+        throw Exception(respuesta.statusCode.toString());
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
+
   Future<String?> getMaxNumTul() async {
     var url = Uri.http(dominio, '$path/getMaxNumTul');
 

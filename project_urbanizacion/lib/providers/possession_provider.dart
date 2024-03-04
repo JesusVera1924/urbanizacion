@@ -11,6 +11,20 @@ class PossessionProvider extends ChangeNotifier {
   final numeroTxtController = TextEditingController();
   bool isBloque = true;
 
+  //controladores
+  final mdmNTxtController = TextEditingController();
+  final dirNTxtController = TextEditingController();
+  final mdmSTxtController = TextEditingController();
+  final dirSTxtController = TextEditingController();
+  final mdmETxtController = TextEditingController();
+  final dirETxtController = TextEditingController();
+  final mdmOTxtController = TextEditingController();
+  final dirOTxtController = TextEditingController();
+  final idRTxtController = TextEditingController();
+  final idATxtController = TextEditingController();
+  final barrioTxtController = TextEditingController();
+  final coordenadaTxtController = TextEditingController();
+
   Future<bool> saveReferencia(
       String clsTul,
       String fecTul,
@@ -68,5 +82,76 @@ class PossessionProvider extends ChangeNotifier {
   Future getObtenerTicket() async {
     String? resp = await api.getMaxNumTul();
     numeroTxtController.text = UtilView.getSecuenceString(resp ?? "0", 6);
+  }
+
+  Future getObtenerInfLot(String uid) async {
+    obj = await api.getGc0032LOTID(uid);
+    if (obj != null) {
+      mdmNTxtController.text = "${obj!.mtnLot}";
+      dirNTxtController.text = obj!.dtnLot;
+      mdmSTxtController.text = "${obj!.mtsLot}";
+      dirSTxtController.text = obj!.dtsLot;
+
+      mdmETxtController.text = "${obj!.mteLot}";
+      dirETxtController.text = obj!.dteLot;
+      mdmOTxtController.text = "${obj!.mtoLot}";
+      dirOTxtController.text = obj!.dtoLot;
+
+      idATxtController.text = "${obj!.ntaLot}";
+      idRTxtController.text = "${obj!.ntrLot}";
+      barrioTxtController.text = obj!.bosLot;
+      coordenadaTxtController.text = obj!.gpsLot;
+    }
+    notifyListeners();
+  }
+
+  Future getObtenerTicketLot() async {
+    String? resp = await api.getMaxNtaLot();
+    idATxtController.text = UtilView.getSecuenceString(resp ?? "0", 6);
+  }
+
+  Future<bool> saveReferenciaLot(String cedula) async {
+    try {
+      String opt = await api.postinsertGc0032LOT(Gc0032LOT(
+          codEmp: Constantes.selectEmpresa.codEmp,
+          secNic: cedula,
+          mtnLot: double.parse(mdmNTxtController.text),
+          dtnLot: dirNTxtController.text,
+          mtsLot: double.parse(mdmSTxtController.text),
+          dtsLot: dirSTxtController.text,
+          mteLot: double.parse(mdmETxtController.text),
+          dteLot: dirETxtController.text,
+          mtoLot: double.parse(mdmOTxtController.text),
+          dtoLot: dirOTxtController.text,
+          ntaLot: int.parse(idATxtController.text),
+          ntrLot: int.parse(idRTxtController.text),
+          bosLot: barrioTxtController.text,
+          vtiLot: "",
+          gpsLot: coordenadaTxtController.text,
+          stsLot: "A"));
+      if (opt.contains("200")) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      //print("Error al guardar la referencia");
+      return false;
+    }
+  }
+
+  clearValue() {
+    mdmNTxtController.clear();
+    dirNTxtController.clear();
+    mdmSTxtController.clear();
+    dirSTxtController.clear();
+    mdmETxtController.clear();
+    dirETxtController.clear();
+    mdmOTxtController.clear();
+    dirOTxtController.clear();
+    idATxtController.clear();
+    idRTxtController.clear();
+    barrioTxtController.clear();
+    coordenadaTxtController.clear();
   }
 }

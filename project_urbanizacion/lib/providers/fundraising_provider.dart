@@ -58,6 +58,7 @@ class FundraisingProvider extends ChangeNotifier {
     if (selectCobranza != null) {
       String opt = await api.postinsertGc0020Cobranza(selectCobranza!, value);
       if (opt.contains("200")) {
+        selectHabitante = null;
         return true;
       }
     }

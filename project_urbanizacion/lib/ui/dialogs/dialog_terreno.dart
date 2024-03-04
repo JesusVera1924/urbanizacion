@@ -2,27 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:project_urbanizacion/providers/bach_provider.dart';
+import 'package:project_urbanizacion/providers/possession_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 
-Future<void> showDialogAddTerreno(
-    BuildContext context, BachProvider provider, String cedula) async {
+Future<void> showDialogAddTerreno(BuildContext context,
+    PossessionProvider possessionProvider, String cedula) async {
   final formKeyDetailtNota = GlobalKey<FormState>();
-  final mdmNTxtController = TextEditingController();
-  final dirNTxtController = TextEditingController();
-  final mdmSTxtController = TextEditingController();
-  final dirSTxtController = TextEditingController();
-  final mdmETxtController = TextEditingController();
-  final dirETxtController = TextEditingController();
-  final mdmOTxtController = TextEditingController();
-  final dirOTxtController = TextEditingController();
-  final idRTxtController = TextEditingController();
-  final barrioTxtController = TextEditingController();
-  final coordenadaTxtController = TextEditingController();
 
   await showDialog(
       barrierDismissible: false,
@@ -71,12 +60,14 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: mdmNTxtController,
+                                  controller:
+                                      possessionProvider.mdmNTxtController,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'^(?:\+|-)?\d+$')),
                                     LengthLimitingTextInputFormatter(6),
                                   ],
+                                  enabled: possessionProvider.obj == null,
                                   style: CustomLabels.h2,
                                   decoration: CustomInputs.txtInputDecoration2(
                                       hint: '', icon: Icons.contacts_rounded),
@@ -104,7 +95,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: dirNTxtController,
+                                  controller:
+                                      possessionProvider.dirNTxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'(^[a-zA-Z ]*$)')),
@@ -137,7 +130,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: mdmSTxtController,
+                                  controller:
+                                      possessionProvider.mdmSTxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'^(?:\+|-)?\d+$')),
@@ -170,7 +165,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: dirSTxtController,
+                                  controller:
+                                      possessionProvider.dirSTxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'(^[a-zA-Z ]*$)')),
@@ -203,7 +200,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: mdmETxtController,
+                                  controller:
+                                      possessionProvider.mdmETxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'^(?:\+|-)?\d+$')),
@@ -236,7 +235,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: dirETxtController,
+                                  controller:
+                                      possessionProvider.dirETxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'(^[a-zA-Z ]*$)')),
@@ -269,7 +270,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: mdmOTxtController,
+                                  controller:
+                                      possessionProvider.mdmOTxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'^(?:\+|-)?\d+$')),
@@ -302,7 +305,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: dirOTxtController,
+                                  controller:
+                                      possessionProvider.dirOTxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'(^[a-zA-Z ]*$)')),
@@ -339,13 +344,15 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: provider.idATxtController,
+                                  controller:
+                                      possessionProvider.idATxtController,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'^(?:\+|-)?\d+$')),
                                     LengthLimitingTextInputFormatter(5),
                                   ],
                                   style: CustomLabels.h2,
+                                  enabled: false,
                                   decoration: CustomInputs.txtInputDecoration2(
                                       hint: '', icon: Icons.contacts_rounded),
                                   validator: (value) {
@@ -372,7 +379,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: idRTxtController,
+                                  controller:
+                                      possessionProvider.idRTxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'^(?:\+|-)?\d+$')),
@@ -405,7 +414,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: barrioTxtController,
+                                  controller:
+                                      possessionProvider.barrioTxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'(^[a-zA-Z ]*$)')),
@@ -438,7 +449,9 @@ Future<void> showDialogAddTerreno(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12))),
                                 TextFormField(
-                                  controller: coordenadaTxtController,
+                                  controller: possessionProvider
+                                      .coordenadaTxtController,
+                                  enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(Constantes.ip)),
@@ -473,20 +486,7 @@ Future<void> showDialogAddTerreno(
                   return Colors.transparent;
                 })),
                 onPressed: () async {
-                  var resp = await provider.saveReferencia(
-                      cedula,
-                      mdmNTxtController.text,
-                      dirNTxtController.text,
-                      mdmSTxtController.text,
-                      dirSTxtController.text,
-                      mdmETxtController.text,
-                      dirETxtController.text,
-                      mdmOTxtController.text,
-                      dirOTxtController.text,
-                      provider.idATxtController.text,
-                      idRTxtController.text,
-                      barrioTxtController.text,
-                      "");
+                  var resp = await possessionProvider.saveReferenciaLot(cedula);
 
                   if (resp) {
                     UtilView.messageAccess(
