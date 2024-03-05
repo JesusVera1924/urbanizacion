@@ -671,7 +671,7 @@ class _DocumentViewState extends State<DocumentView> {
                                         mensaje: "Observación extendida",
                                         fc: () async {
                                           await showDialogAddComentario(
-                                              context);
+                                              context, documentProvider);
                                           //evento de dialogo de las demas observaciones
                                         }),
                               ),
@@ -693,8 +693,7 @@ class _DocumentViewState extends State<DocumentView> {
                       children: [
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width:
-                              ScreenQueries.instance.customWidth(context, 10),
+                          width: ScreenQueries.instance.customWidth(context, 9),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

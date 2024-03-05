@@ -793,11 +793,8 @@ class _HabitanteViewState extends State<HabitanteView> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 6.5),
       width: !ScreenQueries.instance.isMobile(context)
-          ? ScreenQueries.instance.isTablet(context)
-              ? ScreenQueries.instance
-                  .width2(ScreenQueries.instance.width(context), 3)
-              : ScreenQueries.instance
-                  .width2(ScreenQueries.instance.width(context), 2)
+          ? ScreenQueries.instance
+              .width2(ScreenQueries.instance.width(context), 2)
           : double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -822,7 +819,7 @@ class _HabitanteViewState extends State<HabitanteView> {
                         child: SizedBox(
                           width: ScreenQueries.instance.width(context) < 1200
                               ? 70
-                              : 150,
+                              : 140,
                           child: Text(value,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,

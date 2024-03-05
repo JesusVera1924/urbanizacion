@@ -14,6 +14,12 @@ class DocumentProvider extends ChangeNotifier {
   List<Gc0032LOT> listObj = [];
   bool isBloque = true;
   final idDocTxtController = TextEditingController();
+  //dialogo de comentario
+  final obs1TxtController = TextEditingController();
+  final obs2TxtController = TextEditingController();
+  final obs3TxtController = TextEditingController();
+  final obs4TxtController = TextEditingController();
+
   Future<bool> saveReferencia(
       String fecDup,
       String secNic,
@@ -53,10 +59,10 @@ class DocumentProvider extends ChangeNotifier {
           umdLot: "",
           fmdLot: DateTime.now(),
           ob1Lot: ob1Lot,
-          ob2Lot: "",
-          ob3Lot: "",
-          ob4Lot: "",
-          ob5Lot: "",
+          ob2Lot: obs1TxtController.text,
+          ob3Lot: obs2TxtController.text,
+          ob4Lot: obs3TxtController.text,
+          ob5Lot: obs4TxtController.text,
           st1Lot: "A",
           st2Lot: "",
           st3Lot: "",
@@ -70,6 +76,7 @@ class DocumentProvider extends ChangeNotifier {
       String opt = await api.postinsertGc0040(objeto);
       if (opt.contains("200")) {
         await CreateFileWeb.onStarPdf(objeto, habitante!.nomNic);
+        clearValues();
         return true;
       } else {
         return false;
@@ -94,6 +101,13 @@ class DocumentProvider extends ChangeNotifier {
   showViewEvent() {
     isBloque = !isBloque;
     notifyListeners();
+  }
+
+  clearValues() {
+    obs1TxtController.clear();
+    obs2TxtController.clear();
+    obs3TxtController.clear();
+    obs4TxtController.clear();
   }
 
   Future getObtenerTicket() async {

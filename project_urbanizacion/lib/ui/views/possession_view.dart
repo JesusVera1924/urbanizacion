@@ -251,18 +251,14 @@ class _PossessionViewState extends State<PossessionView> {
                         overlayColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.hovered)) {
-                              return Colors
-                                  .greenAccent; // Color de overlay al pasar el mouse
+                              return Colors.greenAccent;
                             }
-                            return Colors
-                                .transparent; // Si no está en estado hover, usa el color predeterminado
+                            return Colors.transparent;
                           },
                         ),
                         mouseCursor: MaterialStateProperty.all<MouseCursor>(
-                          SystemMouseCursors
-                              .click, // Cambia el cursor al pasar sobre el botón
+                          SystemMouseCursors.click,
                         ),
-                        // Otros estilos de botón
                       ),
                       child: Text(
                           possessionProvider.obj == null
@@ -395,8 +391,7 @@ class _PossessionViewState extends State<PossessionView> {
                       children: [
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 5),
-                          width:
-                              ScreenQueries.instance.customWidth(context, 10),
+                          width: ScreenQueries.instance.customWidth(context, 9),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

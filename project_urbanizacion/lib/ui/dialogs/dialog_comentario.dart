@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project_urbanizacion/providers/document_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 
-Future<void> showDialogAddComentario(BuildContext context) async {
+Future<void> showDialogAddComentario(
+    BuildContext context, DocumentProvider provider) async {
   final formKeyDetailtNota = GlobalKey<FormState>();
-  final obs1TxtController = TextEditingController();
-  final obs2TxtController = TextEditingController();
-  final obs3TxtController = TextEditingController();
-  final obs4TxtController = TextEditingController();
 
   await showDialog(
       barrierDismissible: false,
@@ -55,7 +53,7 @@ Future<void> showDialogAddComentario(BuildContext context) async {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12))),
                             TextFormField(
-                              controller: obs1TxtController,
+                              controller: provider.obs1TxtController,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
                                     RegExp(r'(^[a-zA-Z ]*$)')),
@@ -87,7 +85,7 @@ Future<void> showDialogAddComentario(BuildContext context) async {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12))),
                             TextFormField(
-                              controller: obs2TxtController,
+                              controller: provider.obs2TxtController,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
                                     RegExp(r'(^[a-zA-Z ]*$)')),
@@ -119,7 +117,7 @@ Future<void> showDialogAddComentario(BuildContext context) async {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12))),
                             TextFormField(
-                              controller: obs3TxtController,
+                              controller: provider.obs3TxtController,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
                                     RegExp(r'(^[a-zA-Z ]*$)')),
@@ -151,7 +149,7 @@ Future<void> showDialogAddComentario(BuildContext context) async {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12))),
                             TextFormField(
-                              controller: obs4TxtController,
+                              controller: provider.obs4TxtController,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
                                     RegExp(r'(^[a-zA-Z ]*$)')),
@@ -183,7 +181,7 @@ Future<void> showDialogAddComentario(BuildContext context) async {
                   }
                   return Colors.transparent;
                 })),
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).pop(),
                 child: const Text('Aceptar',
                     style: TextStyle(
                         fontSize: 14,
