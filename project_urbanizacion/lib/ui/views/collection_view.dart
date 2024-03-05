@@ -34,12 +34,6 @@ class _CollectionViewState extends State<CollectionView> {
   final formkey = GlobalKey<FormState>();
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   void dispose() {
     valorTxtController.dispose();
     fchTxtController.dispose();
@@ -304,7 +298,7 @@ class _CollectionViewState extends State<CollectionView> {
                               ),
                             ),
                           ),
-                          child: const Text('Aceptar'),
+                          child: const Text('Generar Couta'),
                         ),
                         const SizedBox(width: 10),
                         FilledButton(

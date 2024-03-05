@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:project_urbanizacion/providers/possession_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
-import 'package:project_urbanizacion/utils/constantes.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 
@@ -454,8 +453,8 @@ Future<void> showDialogAddTerreno(BuildContext context,
                                   enabled: possessionProvider.obj == null,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
-                                        RegExp(Constantes.ip)),
-                                    LengthLimitingTextInputFormatter(50)
+                                        RegExp(r'(^[0-9.]*$)')),
+                                    LengthLimitingTextInputFormatter(25),
                                   ],
                                   style: CustomLabels.h2,
                                   decoration: CustomInputs.txtInputDecoration2(
@@ -476,32 +475,34 @@ Future<void> showDialogAddTerreno(BuildContext context,
                   ),
                 )),
             actions: [
-              TextButton(
-                style: ButtonStyle(backgroundColor:
-                    MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return Colors.black12;
-                  }
-                  return Colors.transparent;
-                })),
-                onPressed: () async {
-                  var resp = await possessionProvider.saveReferenciaLot(cedula);
+              if (!possessionProvider.isActualizar)
+                TextButton(
+                  style: ButtonStyle(backgroundColor:
+                      MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.hovered)) {
+                      return Colors.black12;
+                    }
+                    return Colors.transparent;
+                  })),
+                  onPressed: () async {
+                    var resp =
+                        await possessionProvider.saveReferenciaLot(cedula);
 
-                  if (resp) {
-                    UtilView.messageAccess(
-                        context, "Notificación", "Proceso Exitoso");
-                  } else {
-                    UtilView.messageError(
-                        context, "Error", "Error del formulario");
-                  }
-                },
-                child: const Text('Aceptar',
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold)),
-              ),
+                    if (resp) {
+                      UtilView.messageAccess(
+                          context, "Notificación", "Proceso Exitoso");
+                    } else {
+                      UtilView.messageError(
+                          context, "Error", "Error del formulario");
+                    }
+                  },
+                  child: const Text('Aceptar',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold)),
+                ),
               TextButton(
                 style: ButtonStyle(backgroundColor:
                     MaterialStateProperty.resolveWith<Color>(

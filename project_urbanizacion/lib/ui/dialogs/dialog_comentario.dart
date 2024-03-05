@@ -24,7 +24,7 @@ Future<void> showDialogAddComentario(
                 Padding(
                   padding: EdgeInsets.only(left: 5),
                   child: Text(
-                    "AGREGAR NUEVA COMENTARIO",
+                    "AGREGAR COMENTARIOS",
                     style: TextStyle(
                         color: Colors.red, fontWeight: FontWeight.bold),
                   ),

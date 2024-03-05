@@ -658,8 +658,8 @@ class _BatchtViewState extends State<BatchtView> {
                                 style: CustomLabels.h2,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                      RegExp(r'(^[a-zA-Z ]*$)')),
-                                  LengthLimitingTextInputFormatter(50),
+                                      RegExp(r'(^[0-9.]*$)')),
+                                  LengthLimitingTextInputFormatter(25),
                                 ],
                                 decoration: CustomInputs.txtInputDecoration2(
                                     hint: "", icon: Icons.location_on_sharp),

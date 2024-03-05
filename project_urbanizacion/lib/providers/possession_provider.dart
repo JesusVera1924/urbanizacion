@@ -10,6 +10,7 @@ class PossessionProvider extends ChangeNotifier {
   Gc0032LOT? obj;
   final numeroTxtController = TextEditingController();
   bool isBloque = true;
+  bool isActualizar = false;
 
   //controladores
   final mdmNTxtController = TextEditingController();
@@ -101,6 +102,7 @@ class PossessionProvider extends ChangeNotifier {
       idRTxtController.text = "${obj!.ntrLot}";
       barrioTxtController.text = obj!.bosLot;
       coordenadaTxtController.text = obj!.gpsLot;
+      isActualizar = true;
     }
     notifyListeners();
   }
@@ -153,5 +155,6 @@ class PossessionProvider extends ChangeNotifier {
     idRTxtController.clear();
     barrioTxtController.clear();
     coordenadaTxtController.clear();
+    obj = null;
   }
 }

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:project_urbanizacion/model/gc0032lot.dart';
 import 'package:project_urbanizacion/providers/bach_provider.dart';
 import 'package:project_urbanizacion/providers/possession_provider.dart';
 import 'package:project_urbanizacion/style/custom_inputs.dart';
@@ -293,6 +292,7 @@ class _PossessionViewState extends State<PossessionView> {
                                       RegExp(r'^(?:\+|-)?\d+$')),
                                   LengthLimitingTextInputFormatter(5)
                                 ],
+                                enabled: !possessionProvider.isActualizar,
                                 style: CustomLabels.h2,
                                 onChanged: (value) async {
                                   if (value.length == 5) {
@@ -579,7 +579,13 @@ class _PossessionViewState extends State<PossessionView> {
                             margin: const EdgeInsets.only(left: 5),
                             child: FilledButton(
                               onPressed: () async {
-                                formkey.currentState!.reset();
+                                idATxtController.clear();
+                                idRTxtController.clear();
+                                obsLtTxtController.clear();
+                                valTxtController.clear();
+                                obsTxtController.clear();
+                                encTxtController.clear();
+                                possessionProvider.clearValue();
                               },
                               style: ButtonStyle(
                                 shape: MaterialStateProperty.all<

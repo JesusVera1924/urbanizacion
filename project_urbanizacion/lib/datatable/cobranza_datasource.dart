@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project_urbanizacion/model/http/cobranza.dart';
 import 'package:project_urbanizacion/providers/fundraising_provider.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:project_urbanizacion/services/notifications_service.dart';
 import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_cobranza.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_cobro.dart';
@@ -92,30 +93,41 @@ class CobranzaDTS extends DataGridSource {
           children: [
             InkWell(
                 onTap: () async {
-                  await provider.getListDet(row.getCells()[5].value.movimiento);
-                  await showDialogCobranza(context, provider);
+                  if (row.getCells()[3].value != 0) {
+                    await provider
+                        .getListDet(row.getCells()[5].value.movimiento);
+                    await showDialogCobranza(context, provider);
+                  } else {
+                    NotificationsService.showSnackbar(
+                        'COBRANZA COMPLETADA [ACTUALIZAR]');
+                  }
                 },
                 child: const Tooltip(
                     message: "DETALLE",
                     child: Icon(Icons.remove_red_eye_sharp))),
             InkWell(
                 onTap: () async {
-                  await provider.getListDet(row.getCells()[5].value.movimiento);
-                  //String resp =
-                  await showDialogCobro(
-                      context, provider, row.getCells()[5].value.movimiento);
-                  /* if (resp != "0") {
-                    for (var element in provider.list) {
-                      if (element.movimiento ==
-                          row.getCells()[5].value.movimiento) {
-                        element.total = element.total - double.parse(resp);
-                        _dataGridRows[row.getCells()[6].value]
+                  if (row.getCells()[3].value != 0) {
+                    await provider
+                        .getListDet(row.getCells()[5].value.movimiento);
+                    String resp = await showDialogCobro(
+                        context, provider, row.getCells()[5].value.movimiento);
+                    if (resp != "0") {
+                      for (var element in provider.list) {
+                        if (element.movimiento ==
+                            row.getCells()[5].value.movimiento) {
+                          element.total = element.total - double.parse(resp);
+                          /* _dataGridRows[row.getCells()[6].value]
                             .getCells()[3]
-                            .value = element.total;
+                            .value = element.total; */
+                        }
                       }
+                      //notifyDataSourceListeners();
                     }
-                    notifyDataSourceListeners();
-                  } */
+                  } else {
+                    NotificationsService.showSnackbar(
+                        'COBRANZA COMPLETADA [ACTUALIZAR]');
+                  }
                 },
                 child: const Tooltip(
                     message: "AGREGAR COBRANZA",
@@ -130,5 +142,9 @@ class CobranzaDTS extends DataGridSource {
     ];
 
     return list;
+  }
+
+  void updateDataGridSource({required RowColumnIndex rowColumnIndex}) {
+    notifyDataSourceListeners(rowColumnIndex: rowColumnIndex);
   }
 }
