@@ -15,7 +15,7 @@ import 'package:project_urbanizacion/model/http/historial.dart';
 
 class SolicitudApi {
   //192.168.3.57
-  static String dominio = "192.168.3.57:8080";
+  static String dominio = "192.168.3.4:8081";
   static String path = "/regularizacion";
 
   Future<Authentication?> login(String email, String pass) async {
@@ -661,6 +661,27 @@ class SolicitudApi {
     }
   }
 
+  // IMAGEN ----------------------------------------------------------------------------------------------------------------------------------------------
+
+  Future uploadImg(String base64, String titulo) async {
+    var url = Uri.http(dominio, '$path/uploadImg');
+
+    // print(url);
+    final respuesta = await http.post(
+      url,
+      headers: {"Content-type": "application/x-www-form-urlencoded"},
+      body: {
+        "image": base64,
+        "data": titulo,
+      },
+    );
+
+    if (respuesta.statusCode == 200) {
+      //   print("correcto-----" + respuesta.body);
+    } else {
+      print("fallo al subir el Archivo${respuesta.statusCode}");
+    }
+  }
 /* 
   Future<Gc0032?> getGc0032(String cedula) async {
     var url = Uri.http(dominio, '$path/login', {'correo': email, 'pass': pass});

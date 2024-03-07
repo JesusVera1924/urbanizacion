@@ -121,6 +121,11 @@ class UtilView {
     return resp;
   }
 
+  static String getFirma() {
+    DateTime date = DateTime.now();
+    return '${date.day.toString().padLeft(2, '0')}${date.month.toString().padLeft(2, '0')}${date.year}_${date.hour}_${date.minute}';
+  }
+
   static String? validarFecha(String? value) {
     String? resp;
 

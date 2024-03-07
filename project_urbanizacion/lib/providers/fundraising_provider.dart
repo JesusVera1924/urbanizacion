@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:project_urbanizacion/api/solicitud_api.dart';
 import 'package:project_urbanizacion/model/gc0020Cob.dart';
@@ -12,12 +14,30 @@ class FundraisingProvider extends ChangeNotifier {
   Gc0020Cob? selectCobranza;
   //
   List<Cobranza> list = [];
+  List<Cobranza> listTemp = [];
   List<Historial> listHist = [];
   List<Gc0020Cob> listDet = [];
+  int index = 0;
 
   Future getAllList() async {
     try {
       list = await api.getListCobranza();
+      listTemp = list;
+    } catch (e) {
+      //print('Error: $e');
+    }
+    notifyListeners();
+  }
+
+  Future getAllListFiltar() async {
+    try {
+      if (index == 1) {
+        list = listTemp.where((element) => element.total != 0.0).toList();
+      } else if (index == 2) {
+        list = listTemp.where((element) => element.total == 0.0).toList();
+      } else {
+        list = listTemp;
+      }
     } catch (e) {
       //print('Error: $e');
     }

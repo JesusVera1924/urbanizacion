@@ -11,10 +11,10 @@ class Logo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.bubble_chart_outlined, color: Color(0xff7A6BF5)),
+          const Icon(Icons.corporate_fare_sharp, color: Color(0xff7A6BF5)),
           const SizedBox(width: 10),
           Text(
-            "EMPRESA01",
+            "COMUNAL-01",
             style: GoogleFonts.montserratAlternates(
                 fontSize: 20, fontWeight: FontWeight.w200, color: Colors.white),
           )

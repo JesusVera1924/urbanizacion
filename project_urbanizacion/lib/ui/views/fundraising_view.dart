@@ -5,6 +5,7 @@ import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/components/white_card.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class FundraisingView extends StatefulWidget {
@@ -36,10 +37,18 @@ class _FundraisingViewState extends State<FundraisingView> {
         children: [
           WhiteCard(
               listWidget: [
-                InkWell(
-                  onTap: () async => await provider.getAllList(),
-                  child: const Icon(Icons.refresh),
-                )
+                ToggleSwitch(
+                  initialLabelIndex: provider.index,
+                  totalSwitches: 3,
+                  fontSize: 12,
+                  minWidth: 100,
+                  minHeight: 30,
+                  labels: const ['Todos', 'Pendientes', 'Cerrados'],
+                  onToggle: (index) {
+                    provider.index = index!;
+                    provider.getAllListFiltar();
+                  },
+                ),
               ],
               title: "REALIZAR COBRANZA",
               child: SfDataGridTheme(
@@ -113,7 +122,7 @@ List<GridColumn> _buildDataGridForSize(BuildContext context) {
       label: Container(
         padding: const EdgeInsets.all(8.0),
         //width: Responsive.isDesktop(context) ? 100 : 80,
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.center,
         child: Text('PORCENTAJE DE LA COBRANZA',
             style: CustomLabels.h2, overflow: TextOverflow.ellipsis),
       ),

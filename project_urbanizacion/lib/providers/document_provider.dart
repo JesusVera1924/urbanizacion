@@ -110,6 +110,11 @@ class DocumentProvider extends ChangeNotifier {
     obs4TxtController.clear();
   }
 
+  Future getObtenerInfLot(String uid) async {
+    obj = await api.getGc0032LOTID(uid);
+    notifyListeners();
+  }
+
   Future getObtenerTicket() async {
     String? resp = await api.getMaxNumDup();
     idDocTxtController.text = UtilView.getSecuenceString(resp ?? "0", 6);

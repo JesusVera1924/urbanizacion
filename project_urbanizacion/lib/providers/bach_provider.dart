@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,9 @@ class BachProvider extends ChangeNotifier {
   Gc0032? habitante;
   Gc0032LOT? obj;
   List<Gc0032LOT> listObj = [];
-  List<String> list = [];
   bool isBloque = true;
+  Uint8List? listImg1;
+  Uint8List? listImg2;
 
   final idATxtController = TextEditingController();
 
@@ -84,17 +86,40 @@ class BachProvider extends ChangeNotifier {
     idATxtController.text = UtilView.getSecuenceString(resp ?? "0", 6);
   }
 
-  Future<bool> openFileExplorer(BuildContext context) async {
-    bool resp = false;
+  Future openFileExplorer(BuildContext context, int tp) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom, allowedExtensions: ['png', "jpg", "jpeg"]);
 
     if (result != null) {
       PlatformFile file = result.files.first;
-      if (file.extension!.toLowerCase() == "pdf") {
-        list.add(base64.encode(file.bytes!.toList()));
+      if (tp == 1) {
+        listImg1 = file.bytes!;
+      } else {
+        listImg2 = file.bytes!;
       }
     }
-    return resp;
+    notifyListeners();
+  }
+
+  limpiarImagen(int tp) {
+    if (tp == 1) {
+      listImg1 = null;
+    } else {
+      listImg2 = null;
+    }
+    notifyListeners();
+  }
+
+  saveImg(String uid) {
+    if (listImg1 != null) {
+      api.uploadImg(base64.encode(listImg1!),
+          "${uid}_${idATxtController.text}${UtilView.getFirma()}");
+      listImg1 = null;
+    }
+    if (listImg2 != null) {
+      api.uploadImg(base64.encode(listImg2!),
+          "${uid}_${idATxtController.text}${UtilView.getFirma()}");
+      listImg2 = null;
+    }
   }
 }

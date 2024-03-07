@@ -34,6 +34,7 @@ class _DocumentViewState extends State<DocumentView> {
   final mdmETxtController = TextEditingController();
   final dirETxtController = TextEditingController();
   final mdmOTxtController = TextEditingController();
+  final cordTxtController = TextEditingController();
   final dirOTxtController = TextEditingController();
   final idATxtController = TextEditingController();
   final idRTxtController = TextEditingController();
@@ -79,6 +80,7 @@ class _DocumentViewState extends State<DocumentView> {
     valTxtController.dispose();
     obsTxtController.dispose();
     encTxtController.dispose();
+    cordTxtController.dispose();
     formkey.currentState!.dispose();
     super.dispose();
   }
@@ -211,6 +213,8 @@ class _DocumentViewState extends State<DocumentView> {
                                       "${documentProvider.obj!.ntrLot}";
                                   barrioTxtController.text =
                                       documentProvider.obj!.bosLot;
+                                  cordTxtController.text =
+                                      documentProvider.obj!.gpsLot;
 
                                   documentProvider.showViewEvent();
                                   isBloqueo = !isBloqueo;
@@ -647,7 +651,41 @@ class _DocumentViewState extends State<DocumentView> {
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 6),
                           width:
-                              ScreenQueries.instance.customWidth(context, 2.6),
+                              ScreenQueries.instance.customWidth(context, 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 5),
+                                  child: Text('Coordenadas',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12))),
+                              TextFormField(
+                                controller: cordTxtController,
+                                enabled: documentProvider.isBloque,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'^(?:\+|-)?\d+$')),
+                                  LengthLimitingTextInputFormatter(6),
+                                ],
+                                style: CustomLabels.h2,
+                                decoration: CustomInputs.txtInputDecoration2(
+                                    hint: '', icon: Icons.contacts_rounded),
+                                validator: (value) {
+                                  if (value == null || value == "") {
+                                    return 'Por favor, introduzca un valor';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 6),
+                          width:
+                              ScreenQueries.instance.customWidth(context, 3.5),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
