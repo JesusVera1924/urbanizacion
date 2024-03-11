@@ -4,13 +4,8 @@ import 'package:project_urbanizacion/utils/screen_size.dart';
 
 Future<String> showDialogMaps(BuildContext context) async {
   String resp = "";
-  late GoogleMapController mapController;
   LatLng tappedPoint = const LatLng(-2.158294, -79.894655);
   Marker? marker;
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
 
   await showDialog(
       barrierDismissible: false,
@@ -61,8 +56,8 @@ Future<String> showDialogMaps(BuildContext context) async {
             ),
             content: SizedBox(
                 width: ScreenQueries.instance.width(context) / 2,
+                height: ScreenQueries.instance.height(context) / 2,
                 child: GoogleMap(
-                  onMapCreated: _onMapCreated,
                   zoomControlsEnabled: true,
                   myLocationButtonEnabled: true,
                   mapToolbarEnabled: true,
