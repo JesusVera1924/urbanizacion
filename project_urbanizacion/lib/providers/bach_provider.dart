@@ -15,6 +15,8 @@ class BachProvider extends ChangeNotifier {
   Gc0032LOT? obj;
   List<Gc0032LOT> listObj = [];
   bool isBloque = true;
+  String nameImg1 = "";
+  String nameImg2 = "";
   Uint8List? listImg1;
   Uint8List? listImg2;
 
@@ -37,24 +39,52 @@ class BachProvider extends ChangeNotifier {
       String bosLot,
       String ubi) async {
     try {
-      String opt = await api.postinsertGc0032LOT(Gc0032LOT(
-          codEmp: Constantes.selectEmpresa.codEmp,
-          secNic: uid,
-          mtnLot: double.parse(mtnLot),
-          dtnLot: dtnLot,
-          mtsLot: double.parse(mtsLot),
-          dtsLot: dtsLot,
-          mteLot: double.parse(mteLot),
-          dteLot: dteLot,
-          mtoLot: double.parse(mtoLot),
-          dtoLot: dtoLot,
-          ntaLot: int.parse(ntaLot),
-          ntrLot: int.parse(ntrLot),
-          bosLot: bosLot,
-          vtiLot: "",
-          gpsLot: ubi,
-          stsLot: "A"));
+      String opt = "";
+      if (isBloque) {
+        opt = await api.postinsertGc0032LOT(Gc0032LOT(
+            codEmp: Constantes.selectEmpresa.codEmp,
+            secNic: uid,
+            mtnLot: double.parse(mtnLot),
+            dtnLot: dtnLot,
+            mtsLot: double.parse(mtsLot),
+            dtsLot: dtsLot,
+            mteLot: double.parse(mteLot),
+            dteLot: dteLot,
+            mtoLot: double.parse(mtoLot),
+            dtoLot: dtoLot,
+            ntaLot: int.parse(ntaLot),
+            ntrLot: int.parse(ntrLot),
+            bosLot: bosLot,
+            vtiLot: "$nameImg1/$nameImg2",
+            gpsLot: ubi,
+            stsLot: "A"));
+      } else {
+        bool resp = await api.putGc0032Lot(Gc0032LOT(
+            codEmp: Constantes.selectEmpresa.codEmp,
+            secNic: uid,
+            mtnLot: double.parse(mtnLot),
+            dtnLot: dtnLot,
+            mtsLot: double.parse(mtsLot),
+            dtsLot: dtsLot,
+            mteLot: double.parse(mteLot),
+            dteLot: dteLot,
+            mtoLot: double.parse(mtoLot),
+            dtoLot: dtoLot,
+            ntaLot: int.parse(ntaLot),
+            ntrLot: int.parse(ntrLot),
+            bosLot: bosLot,
+            vtiLot: "$uid$nameImg1/$uid$nameImg2",
+            gpsLot: ubi,
+            stsLot: "A"));
+        if (resp) {
+          opt = "200";
+        } else {
+          opt = "400";
+        }
+      }
+
       if (opt.contains("200")) {
+        saveImg(uid);
         return true;
       } else {
         return false;
@@ -94,8 +124,10 @@ class BachProvider extends ChangeNotifier {
       PlatformFile file = result.files.first;
       if (tp == 1) {
         listImg1 = file.bytes!;
+        nameImg1 = "_${idATxtController.text}_1.${file.extension!}";
       } else {
         listImg2 = file.bytes!;
+        nameImg2 = "_${idATxtController.text}_2.${file.extension!}";
       }
     }
     notifyListeners();
@@ -112,14 +144,34 @@ class BachProvider extends ChangeNotifier {
 
   saveImg(String uid) {
     if (listImg1 != null) {
-      api.uploadImg(base64.encode(listImg1!),
-          "${uid}_${idATxtController.text}${UtilView.getFirma()}");
+      api.uploadImg(base64.encode(listImg1!), "$uid$nameImg1");
       listImg1 = null;
+      nameImg1 = "";
     }
     if (listImg2 != null) {
-      api.uploadImg(base64.encode(listImg2!),
-          "${uid}_${idATxtController.text}${UtilView.getFirma()}");
+      api.uploadImg(base64.encode(listImg2!), "$uid$nameImg2");
       listImg2 = null;
+      nameImg2 = "";
+    }
+  }
+
+  Future getObtenerImgs(String value) async {
+    List<String> list = value.split("/");
+    String opt = "";
+    int i = 0;
+    for (var e in list) {
+      if (i == 0) {
+        opt = await api.downloadBase64Info(e);
+        if (opt != "") {
+          listImg1 = base64.decode(opt);
+        }
+      } else {
+        opt = await api.downloadBase64Info(e);
+        if (opt != "") {
+          listImg2 = base64.decode(opt);
+        }
+      }
+      i++;
     }
   }
 }

@@ -15,7 +15,8 @@ import 'package:project_urbanizacion/model/http/historial.dart';
 
 class SolicitudApi {
   //192.168.3.57
-  static String dominio = "192.168.3.4:8081";
+  //192.168.3.4:8081
+  static String dominio = "192.168.3.57:8080";
   static String path = "/regularizacion";
 
   Future<Authentication?> login(String email, String pass) async {
@@ -222,6 +223,24 @@ class SolicitudApi {
   //FIN DE LAS INSERCIONES ---------------------------------------------------------------------------------------------------------------------------
 
   //ACTUALIZACION DE REGISTROS
+
+  Future<bool> putGc0032Lot(Gc0032LOT datos) async {
+    var url = Uri.http(dominio, '$path/updateGc0032Lot');
+
+    final resquet = await http.post(url,
+        body: datos.toJson(),
+        headers: {"Content-type": "application/json;charset=UTF-8"});
+    try {
+      if (resquet.statusCode != 200) {
+        throw Exception('${resquet.statusCode}');
+      } else {
+        String cadena = utf8.decode(resquet.bodyBytes);
+        return cadena.contains('200');
+      }
+    } catch (e) {
+      throw ('$e');
+    }
+  }
 
   Future<bool> putGc0032(Gc0032 datos) async {
     var url = Uri.http(dominio, '$path/updateGc0032');
@@ -681,6 +700,24 @@ class SolicitudApi {
     } else {
       print("fallo al subir el Archivo${respuesta.statusCode}");
     }
+  }
+
+  Future<String> downloadBase64Info(String data) async {
+    String dato = "";
+    var url = Uri.http(dominio, '$path/downloadImg', {"data": data});
+    try {
+      http.Response respuesta = await http.get(url);
+      if (respuesta.statusCode == 200) {
+        dato = utf8.decode(respuesta.bodyBytes) == ""
+            ? ""
+            : utf8.decode(respuesta.bodyBytes);
+      } else {
+        throw Exception('Excepcion ${respuesta.statusCode}');
+      }
+    } catch (e) {
+      throw ('error el en GET: $e');
+    }
+    return dato;
   }
 /* 
   Future<Gc0032?> getGc0032(String cedula) async {

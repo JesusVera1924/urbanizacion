@@ -149,36 +149,44 @@ class _BatchtViewState extends State<BatchtView> {
                               if (resp) {
                                 bachProvider.obj = await showDialogSelectLotes(
                                     context, bachProvider.listObj);
+                                if (bachProvider.obj != null) {
+                                  mdmNTxtController.text =
+                                      "${bachProvider.obj!.mtnLot}";
+                                  dirNTxtController.text =
+                                      bachProvider.obj!.dtnLot;
+                                  mdmSTxtController.text =
+                                      "${bachProvider.obj!.mtsLot}";
+                                  dirSTxtController.text =
+                                      bachProvider.obj!.dtsLot;
+                                  mdmETxtController.text =
+                                      "${bachProvider.obj!.mteLot}";
+                                  dirETxtController.text =
+                                      bachProvider.obj!.dteLot;
+                                  mdmOTxtController.text =
+                                      "${bachProvider.obj!.mtoLot}";
+                                  dirOTxtController.text =
+                                      bachProvider.obj!.dtoLot;
+                                  bachProvider.idATxtController.text =
+                                      "${bachProvider.obj!.ntaLot}";
+                                  idRTxtController.text =
+                                      "${bachProvider.obj!.ntrLot}";
+                                  barrioTxtController.text =
+                                      bachProvider.obj!.bosLot;
+                                  coordenadaTxtController.text =
+                                      bachProvider.obj!.gpsLot;
 
-                                mdmNTxtController.text =
-                                    "${bachProvider.obj!.mtnLot}";
-                                dirNTxtController.text =
-                                    bachProvider.obj!.dtnLot;
-                                mdmSTxtController.text =
-                                    "${bachProvider.obj!.mtsLot}";
-                                dirSTxtController.text =
-                                    bachProvider.obj!.dtsLot;
-                                mdmETxtController.text =
-                                    "${bachProvider.obj!.mteLot}";
-                                dirETxtController.text =
-                                    bachProvider.obj!.dteLot;
-                                mdmOTxtController.text =
-                                    "${bachProvider.obj!.mtoLot}";
-                                dirOTxtController.text =
-                                    bachProvider.obj!.dtoLot;
-                                bachProvider.idATxtController.text =
-                                    "${bachProvider.obj!.ntaLot}";
-                                idRTxtController.text =
-                                    "${bachProvider.obj!.ntrLot}";
-                                barrioTxtController.text =
-                                    bachProvider.obj!.bosLot;
+                                  await bachProvider
+                                      .getObtenerImgs(bachProvider.obj!.vtiLot);
 
-                                bachProvider.showViewEvent();
-                                UtilView.messageGeneral(
-                                    context,
-                                    "$value Encontado",
-                                    Icons.assignment_ind,
-                                    Colors.green);
+                                  await bachProvider.showViewEvent();
+                                  UtilView.messageGeneral(
+                                      context,
+                                      "$value Encontado",
+                                      Icons.assignment_ind,
+                                      Colors.green);
+                                } else {
+                                  idTextEditingController.clear();
+                                }
                               }
                             }
                           },
@@ -210,7 +218,12 @@ class _BatchtViewState extends State<BatchtView> {
                               dirOTxtController.clear();
                               bachProvider.idATxtController.clear();
                               idRTxtController.clear();
+                              coordenadaTxtController.clear();
                               barrioTxtController.clear();
+                              bachProvider.nameImg1 = "";
+                              bachProvider.nameImg2 = "";
+                              bachProvider.listImg1 = null;
+                              bachProvider.listImg2 = null;
                               bachProvider.showViewEvent();
                             },
                             child:
@@ -224,16 +237,16 @@ class _BatchtViewState extends State<BatchtView> {
                         child: ListTile(
                           title: Text('Datos del contribuyente',
                               style: CustomLabels.h4.copyWith(
-                                  fontWeight:
-                                      FontWeight.bold)), // Contenido del card
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16)), // Contenido del card
                           subtitle: Text(
-                              "Nombre: ${bachProvider.habitante!.nomNic}"
+                              "Nombres: ${bachProvider.habitante!.nomNic}"
                                   .toUpperCase(),
                               style: CustomLabels.h4
                                   .copyWith(fontWeight: FontWeight.bold)),
                           contentPadding: const EdgeInsets.all(1),
-                          leading: const Icon(
-                              Icons.star), // Icono a la izquierda del título
+                          leading: const Icon(Icons.star,
+                              size: 20), // Icono a la izquierda del título
                         ),
                       ),
                     )
@@ -244,7 +257,7 @@ class _BatchtViewState extends State<BatchtView> {
               Expanded(
                 child: WhiteCard(
                     title: "INFORMACION DE LOTE",
-                    listWidget: [],
+                    listWidget: const [],
                     child: Form(
                       key: formkey,
                       child: Column(
@@ -691,7 +704,7 @@ class _BatchtViewState extends State<BatchtView> {
                                       style: CustomLabels.h2,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.allow(
-                                            RegExp(r'(^[0-9.]*$)')),
+                                            RegExp(r'(^[0-9.,-]*$)')),
                                         LengthLimitingTextInputFormatter(25),
                                       ],
                                       decoration:
@@ -740,7 +753,19 @@ class _BatchtViewState extends State<BatchtView> {
 
                                         if (resp) {
                                           idTextEditingController.clear();
-                                          formkey.currentState!.reset();
+                                          mdmNTxtController.clear();
+                                          dirNTxtController.clear();
+                                          mdmSTxtController.clear();
+                                          dirSTxtController.clear();
+                                          mdmETxtController.clear();
+                                          dirETxtController.clear();
+                                          mdmOTxtController.clear();
+                                          dirOTxtController.clear();
+                                          bachProvider.idATxtController.clear();
+                                          idRTxtController.clear();
+                                          barrioTxtController.clear();
+                                          coordenadaTxtController.clear();
+                                          bachProvider.showViewEvent();
                                           UtilView.messageAccess(
                                               context,
                                               "Notificación",
