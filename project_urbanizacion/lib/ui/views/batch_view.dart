@@ -8,6 +8,7 @@ import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/ui/components/white_card.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_acep_canc.dart';
 import 'package:project_urbanizacion/ui/dialogs/dialog_lotes.dart';
+import 'package:project_urbanizacion/ui/dialogs/dialog_maps.dart';
 import 'package:project_urbanizacion/utils/screen_size.dart';
 import 'package:project_urbanizacion/utils/util_view.dart';
 import 'package:provider/provider.dart';
@@ -707,10 +708,17 @@ class _BatchtViewState extends State<BatchtView> {
                                             RegExp(r'(^[0-9.,-]*$)')),
                                         LengthLimitingTextInputFormatter(25),
                                       ],
-                                      decoration:
-                                          CustomInputs.txtInputDecoration2(
-                                              hint: "",
-                                              icon: Icons.location_on_sharp),
+                                      decoration: CustomInputs
+                                          .boxInputDecorationIconAdd(
+                                              icon: Icons.location_on_sharp,
+                                              mensaje:
+                                                  "Seleccionar coordenadas",
+                                              fc: () async {
+                                                String x = await showDialogMaps(
+                                                    context);
+                                                coordenadaTxtController.text =
+                                                    x;
+                                              }),
                                     ),
                                   ],
                                 ),
