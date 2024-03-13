@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:project_urbanizacion/api/solicitud_api.dart';
@@ -34,6 +37,9 @@ class HabitanteProvider extends ChangeNotifier {
   final txtCorreo = TextEditingController();
   final txtVinculo = TextEditingController();
 
+  //imagen
+  String nameImg1 = "";
+  Uint8List? listImg1;
   //metodos
 
   Future<String?> updateHabitante(int tpI, String numero, String name, int tpS,
@@ -194,5 +200,23 @@ class HabitanteProvider extends ChangeNotifier {
 
   Future<List<Gc0032>> getRequestData(String query) async {
     return await getAllSearch(query);
+  }
+
+  Future openFileExplorer(BuildContext context) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom, allowedExtensions: ['png', "jpg", "jpeg"]);
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+
+      listImg1 = file.bytes!;
+      nameImg1 = file.extension!;
+    }
+    notifyListeners();
+  }
+
+  limpiarImagen() {
+    listImg1 = null;
+    notifyListeners();
   }
 }

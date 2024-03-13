@@ -139,7 +139,7 @@ class _CollectionViewState extends State<CollectionView> {
                                 controller: fchTxtController,
                                 decoration:
                                     CustomInputs.boxInputDecorationDatePicker(
-                                        labelText: "Fecha Nacimiento",
+                                        labelText: "",
                                         fc: () => selectDate('fecha')),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(

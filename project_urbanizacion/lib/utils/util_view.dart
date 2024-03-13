@@ -1,6 +1,7 @@
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:project_urbanizacion/style/custom_labels.dart';
 import 'package:project_urbanizacion/style/palette.dart';
 
 class UtilView {
@@ -58,10 +59,11 @@ class UtilView {
 
   static messageAccess(BuildContext context, String title, String message) {
     ElegantNotification.success(
-            title: Text(title,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            description:
-                Text(message, maxLines: 2, overflow: TextOverflow.ellipsis),
+            title: Text(title, style: CustomLabels.hDialogs),
+            description: Text(message,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: CustomLabels.hDialogsBody),
             width: 80,
             height: 80)
         .show(context);
@@ -69,29 +71,30 @@ class UtilView {
 
   static messageError(BuildContext context, String title, String message) {
     ElegantNotification.error(
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      description: Text(message),
-      width: 70,
-      height: 60,
+      title: Text(title, style: CustomLabels.hDialogs),
+      description: Text(message, style: CustomLabels.hDialogsBody),
+      width: 80,
+      height: 80,
     ).show(context);
   }
 
   static messageInfo(BuildContext context, String title, String message) {
     ElegantNotification.info(
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      description: Text(message),
-      width: 70,
-      height: 80,
+      title: Text(title, style: CustomLabels.hDialogs),
+      description: Text(message, style: CustomLabels.hDialogsBody),
+      width: 80,
+      height: 90,
     ).show(context);
   }
 
   static messageGeneral(
       BuildContext context, String message, IconData iconData, Color color) {
     ElegantNotification(
-            title: const Text("Notificación",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            description:
-                Text(message, overflow: TextOverflow.ellipsis, maxLines: 2),
+            title: Text("Notificación", style: CustomLabels.hDialogs),
+            description: Text(message,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                style: CustomLabels.hDialogsBody),
             icon: Icon(iconData, color: color),
             progressIndicatorColor: color,
             width: 70,

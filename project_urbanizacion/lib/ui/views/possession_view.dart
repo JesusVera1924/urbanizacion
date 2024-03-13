@@ -42,8 +42,12 @@ class _PossessionViewState extends State<PossessionView> {
   final obsTxtController = TextEditingController();
   final encTxtController = TextEditingController();
 
+  //Enfoques de navegacion entre cajas
+  late FocusNode focusId;
+
   @override
   void initState() {
+    focusId = FocusNode();
     Provider.of<PossessionProvider>(context, listen: false).getObtenerTicket();
     Provider.of<BachProvider>(context, listen: false).getObtenerTicket();
     fechaTxtController.text =
@@ -53,6 +57,7 @@ class _PossessionViewState extends State<PossessionView> {
 
   @override
   void dispose() {
+    focusId.dispose();
     fechaTxtController.dispose();
     idTxtController.dispose();
     idATxtController.dispose();
@@ -67,6 +72,7 @@ class _PossessionViewState extends State<PossessionView> {
   @override
   Widget build(BuildContext context) {
     final possessionProvider = Provider.of<PossessionProvider>(context);
+    focusId.requestFocus();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Form(
@@ -206,6 +212,7 @@ class _PossessionViewState extends State<PossessionView> {
                                           fontSize: 12))),
                               TextFormField(
                                 controller: idTxtController,
+                                focusNode: focusId,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^(?:\+|-)?\d+$')),

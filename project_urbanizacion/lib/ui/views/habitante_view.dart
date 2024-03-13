@@ -467,6 +467,76 @@ class _HabitanteViewState extends State<HabitanteView> {
                           )
                         ],
                       )),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: Colors.black, width: 0.5)),
+                          height: 200,
+                          width: 200,
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Stack(
+                            children: [
+                              habitanteProvider.listImg1 != null
+                                  ? Center(
+                                      child: Image.memory(
+                                        habitanteProvider.listImg1!,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    )
+                                  : Center(
+                                      child: Image.asset(
+                                        'assets/no-image.jpg',
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                              if (habitanteProvider.listImg1 != null)
+                                Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: InkWell(
+                                    onTap: () {
+                                      habitanteProvider.limpiarImagen();
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.red,
+                                      size: 25,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: () async => await habitanteProvider
+                                .openFileExplorer(context),
+                            style: ButtonStyle(
+                              foregroundColor:
+                                  MaterialStateProperty.all<Color>(Colors.blue),
+                              overlayColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.hovered)) {
+                                    return Colors.greenAccent;
+                                  }
+                                  return Colors.transparent;
+                                },
+                              ),
+                              mouseCursor:
+                                  MaterialStateProperty.all<MouseCursor>(
+                                      SystemMouseCursors.click),
+                            ),
+                            child: Text('SUBIR IMAGEN DE PERFIL',
+                                style: CustomLabels.h4.copyWith(
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black))),
+                      ],
+                    ),
+                  )
                   /* VerticalDivider(thickness: 3, color: Colors.grey[600]), */
                   /*   DefaultTabController(
                       length: 2,

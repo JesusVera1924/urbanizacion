@@ -41,9 +41,15 @@ class _FundraisingViewState extends State<FundraisingView> {
                   initialLabelIndex: provider.index,
                   totalSwitches: 3,
                   fontSize: 12,
-                  minWidth: 100,
+                  minWidth: 110,
                   minHeight: 30,
                   labels: const ['Todos', 'Pendientes', 'Cerrados'],
+                  activeFgColor: Colors.white,
+                  icons: const [
+                    Icons.all_inbox,
+                    Icons.pending_actions,
+                    Icons.assignment_turned_in_rounded
+                  ],
                   onToggle: (index) {
                     provider.index = index!;
                     provider.getAllListFiltar();

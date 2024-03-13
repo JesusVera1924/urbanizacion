@@ -13,4 +13,8 @@ class CustomLabels {
   static TextStyle h3 = const TextStyle(
       fontSize: 11, color: Colors.black, fontWeight: FontWeight.bold);
 
+  static TextStyle hDialogs = const TextStyle(
+      fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold);
+  static TextStyle hDialogsBody = const TextStyle(
+      fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold);
 }

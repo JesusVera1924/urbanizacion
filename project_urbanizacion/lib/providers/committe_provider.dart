@@ -141,9 +141,17 @@ class CommitteProvider extends ChangeNotifier {
     return resp;
   }
 
-  agregarObjList(Gc0032 obj) {
-    list.add(obj.nomNic);
+  String? agregarObjList(Gc0032 obj) {
+    String? resp;
+    bool x =
+        list.where((e) => e.toUpperCase() == obj.nomNic.toUpperCase()).isEmpty;
+    if (x) {
+      list.add(obj.nomNic);
+    } else {
+      resp = "${obj.nomNic.toUpperCase()} SE ENCUENTRA YA REGISTRADO";
+    }
     notifyListeners();
+    return resp;
   }
 
   eliminarObjList(int i) {

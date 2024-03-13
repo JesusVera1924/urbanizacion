@@ -50,11 +50,15 @@ class _DocumentViewState extends State<DocumentView> {
   //CONTROLADOR DEL FORMULARIO
   final formkey = GlobalKey<FormState>();
 
+  //Enfoques de navegacion entre cajas
+  late FocusNode focusId;
+
   //bloqueo de busqueda
   bool isBloqueo = true;
 
   @override
   void initState() {
+    focusId = FocusNode();
     docTFcxtController.text =
         UtilView.dateFormatDMY(DateTime.now().toIso8601String());
     Provider.of<DocumentProvider>(context, listen: false).getObtenerTicket();
@@ -63,6 +67,7 @@ class _DocumentViewState extends State<DocumentView> {
 
   @override
   void dispose() {
+    focusId.dispose();
     idTxtController.dispose();
     docTFcxtController.dispose();
     mdmNTxtController.dispose();
@@ -88,6 +93,7 @@ class _DocumentViewState extends State<DocumentView> {
   @override
   Widget build(BuildContext context) {
     final documentProvider = Provider.of<DocumentProvider>(context);
+    focusId.requestFocus();
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -172,6 +178,7 @@ class _DocumentViewState extends State<DocumentView> {
                           TextFormField(
                             controller: idTxtController,
                             enabled: isBloqueo,
+                            focusNode: focusId,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
                                   RegExp(r'^(?:\+|-)?\d+$')),

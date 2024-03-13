@@ -51,7 +51,7 @@ class _MenuItemSideBarState extends State<MenuItemSideBar> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.roboto(
-                            fontSize: 14,
+                            fontSize: 13,
                             color: Colors.white.withOpacity(0.8))),
                   )
                 ],

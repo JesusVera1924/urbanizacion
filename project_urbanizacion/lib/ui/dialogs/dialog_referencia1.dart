@@ -108,14 +108,14 @@ Future<void> dialogReferencia1(
                             children: [
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 5),
+                                    horizontal: 5.0, vertical: 5),
                                 constraints: BoxConstraints(
                                     maxWidth: !ScreenQueries.instance
                                             .isMobile(context)
                                         ? ScreenQueries.instance.width2(
                                             ScreenQueries.instance
                                                 .width(context),
-                                            1.3)
+                                            1.5)
                                         : double.infinity),
                                 child: DropdownButtonFormField<int>(
                                   value: provider.selectDni,

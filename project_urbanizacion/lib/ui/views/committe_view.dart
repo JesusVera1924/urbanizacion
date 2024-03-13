@@ -336,7 +336,12 @@ class _CommitteViewState extends State<CommitteView> {
                               noResultFoundText: "No se encontro resultados",
                               onChanged: (value) {
                                 if (committeProvider.list.length < 5) {
-                                  committeProvider.agregarObjList(value);
+                                  String? resp =
+                                      committeProvider.agregarObjList(value);
+                                  if (resp != null) {
+                                    UtilView.messageInfo(
+                                        context, "Notificación", resp);
+                                  }
                                 }
                               },
                             ),
@@ -349,28 +354,32 @@ class _CommitteViewState extends State<CommitteView> {
                                 FilledButton(
                                   onPressed: () async {
                                     if (formkey.currentState!.validate()) {
-                                      var resp = await dialogAcepCanc(
-                                          context,
-                                          "Notificación",
-                                          Text('Deseas continuar?',
-                                              style: CustomLabels.h3),
-                                          Icons.assignment_turned_in_rounded,
-                                          Colors.green);
+                                      if (committeProvider.list.length == 5) {
+                                        var resp = await dialogAcepCanc(
+                                            context,
+                                            "Notificación",
+                                            Text('Deseas continuar?',
+                                                style: CustomLabels.h3),
+                                            Icons.assignment_turned_in_rounded,
+                                            Colors.green);
 
-                                      if (resp) {
-                                        var resp = await committeProvider
-                                            .updateComite();
+                                        if (resp) {
+                                          var resp = await committeProvider
+                                              .updateComite();
 
-                                        if (resp != null) {
-                                          UtilView.messageAccess(
-                                              context,
-                                              "NOTIFIACIÓN",
-                                              "ACTUALIZACION CORRECTA");
+                                          if (resp != null) {
+                                            UtilView.messageAccess(
+                                                context,
+                                                "NOTIFIACIÓN",
+                                                "ACTUALIZACION CORRECTA");
+                                          }
                                         }
+                                      } else {
+                                        UtilView.messageError(
+                                            context,
+                                            "NOTIFICACIÓN",
+                                            "LA ORGANIZACION NO PUEDE SER MENOR A 5");
                                       }
-                                    } else {
-                                      UtilView.messageError(context, "Error",
-                                          "Error del formulario");
                                     }
                                   },
                                   style: ButtonStyle(
@@ -584,7 +593,8 @@ class _CommitteViewState extends State<CommitteView> {
                             for (final v in committeProvider.listComitte) ...[
                               Container(
                                   padding: const EdgeInsets.all(8.0),
-                                  margin: const EdgeInsets.only(left: 5),
+                                  margin:
+                                      const EdgeInsets.only(left: 5, bottom: 5),
                                   decoration: BoxDecoration(
                                     color: Colors.grey,
                                     borderRadius: BorderRadius.circular(10.0),

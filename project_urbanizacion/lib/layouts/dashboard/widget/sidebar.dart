@@ -56,7 +56,15 @@ class _SidebarState extends State<Sidebar> {
           ),
 
           MenuItemSideBar(
-            text: 'HABITANTE'.toUpperCase(),
+              text: 'GOB.COMUNAL'.toUpperCase(),
+              icon: Icons.groups_outlined,
+              onPressed: () => navigateTo(Flurorouter.comiteRoute),
+              isActive: SideMenuProvider.enableItems
+                  ? sideMenuProvider.currentPage == Flurorouter.comiteRoute
+                  : false),
+
+          MenuItemSideBar(
+            text: 'HABITANTES'.toUpperCase(),
             icon: Icons.man_rounded,
             onPressed: () => navigateTo(Flurorouter.habitanteRoute),
             isActive: SideMenuProvider.enableItems
@@ -65,15 +73,7 @@ class _SidebarState extends State<Sidebar> {
           ),
 
           MenuItemSideBar(
-              text: 'ORGANIZACIÓN'.toUpperCase(),
-              icon: Icons.groups_outlined,
-              onPressed: () => navigateTo(Flurorouter.comiteRoute),
-              isActive: SideMenuProvider.enableItems
-                  ? sideMenuProvider.currentPage == Flurorouter.comiteRoute
-                  : false),
-
-          MenuItemSideBar(
-            text: 'GENERAR INF.LOTE'.toUpperCase(),
+            text: 'LOTE/POSESIÓN'.toUpperCase(),
             icon: Icons.account_balance_wallet_rounded,
             onPressed: () => navigateTo(Flurorouter.batchRoute),
             isActive: SideMenuProvider.enableItems
@@ -81,7 +81,7 @@ class _SidebarState extends State<Sidebar> {
                 : false,
           ),
           MenuItemSideBar(
-            text: "DOCUMENTO".toUpperCase(),
+            text: "DOC.PORPIEDAD".toUpperCase(),
             icon: Icons.edit_document,
             onPressed: () => navigateTo(Flurorouter.documentRoute),
             isActive: SideMenuProvider.enableItems
@@ -89,7 +89,7 @@ class _SidebarState extends State<Sidebar> {
                 : false,
           ),
           MenuItemSideBar(
-            text: 'TRANSFERENCIA'.toUpperCase(),
+            text: 'TRANSF. PROPIEDAD'.toUpperCase(),
             icon: Icons.transfer_within_a_station_rounded,
             onPressed: () => navigateTo(Flurorouter.possessionRoute),
             isActive: SideMenuProvider.enableItems
@@ -97,14 +97,14 @@ class _SidebarState extends State<Sidebar> {
                 : false,
           ),
           MenuItemSideBar(
-              text: 'COBRANZA'.toUpperCase(),
+              text: 'GENERAZION CUOTAS'.toUpperCase(),
               icon: Icons.currency_exchange_outlined,
               onPressed: () => navigateTo(Flurorouter.collectionRoute),
               isActive: SideMenuProvider.enableItems
                   ? sideMenuProvider.currentPage == Flurorouter.collectionRoute
                   : false),
           MenuItemSideBar(
-              text: 'RECAUDACION'.toUpperCase(),
+              text: 'RECAUDACIONES'.toUpperCase(),
               icon: Icons.move_to_inbox_sharp,
               onPressed: () => navigateTo(Flurorouter.fundraisingRoute),
               isActive: SideMenuProvider.enableItems
@@ -126,7 +126,7 @@ class _SidebarState extends State<Sidebar> {
           const SizedBox(height: 40),
           const TextSeparator(text: 'Salir'),
           MenuItemSideBar(
-              text: 'Cerrar Sesion',
+              text: 'CERRAR SESSIÓN',
               icon: Icons.exit_to_app_outlined,
               onPressed: () {
                 Provider.of<AuthProvider>(context, listen: false).logout();
